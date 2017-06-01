@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 # test all the shit
 A = Matrix([[1,2,3],[6,5,2],[9,0,2]])
 A_col = Matrix([[1,2,3],[6,5,2],[9,0,2]], 'col')

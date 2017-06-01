@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 import copy
 
 # lets the user create a matrix by specifying dimensions and an orientation then calling inputData
