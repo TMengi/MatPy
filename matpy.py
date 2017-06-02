@@ -498,7 +498,6 @@ class Vector:
         # reinitialize objects so that they have the same orientation for comparison
         return Vector(self).__dict__ == Vector(other).__dict__
 
-
     def __getitem__(self, index):
         return self.vector[index]
 
