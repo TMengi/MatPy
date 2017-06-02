@@ -58,7 +58,6 @@ class Matrix:
         # if a column matrix, transpose the values so they can be parsed like normal
         if orientation == 'col':
             matrix = [[row[col_num] for row in matrix] for col_num, value in enumerate(matrix[0])]
-            # print (matrix)
 
         if isinstance(matrix, Matrix):
             matrix = matrix.matrix
@@ -101,9 +100,9 @@ class Matrix:
     def __str__(self):
         return str(self.printMat())
 
-    # standard __eq__ compares __dict__. temporarily flips orientation to row for comparison
     def __eq__(self, other):
-            return Matrix(self,'row').__dict__ == Matrix(other,'row').__dict__
+        # reinitialize objects so that they have the same orientation for comparison
+        return Matrix(self).__dict__ == Matrix(other).__dict__
 
     # adds matrices by adding corresponding rows as vectors. returns another row matrix unless the two added matrices are both cols
     def __add__(self, other):
@@ -429,6 +428,7 @@ class Vector:
 
         if isinstance(vector, Vector):
             vector = list(vector)
+
         #checks that all values are numbers
         for n in vector:
             if not isinstance(n, int) and not isinstance(n, float):
@@ -495,7 +495,9 @@ class Vector:
         return ("{} dimensional Vector object with values {}".format(len(self), self.vector))
 
     def __eq__(self, other):
-        return self.__dict__ == other.__dict__
+        # reinitialize objects so that they have the same orientation for comparison
+        return Vector(self).__dict__ == Vector(other).__dict__
+
 
     def __getitem__(self, index):
         return self.vector[index]
