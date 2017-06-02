@@ -1,18 +1,21 @@
+import matpy as M
+import copy
+
 # test all the shit
-A = Matrix([[1,2,3],[6,5,2],[9,0,2]])
-A_col = Matrix([[1,2,3],[6,5,2],[9,0,2]], 'col')
-B = Matrix([[1,2,3],[6,5,2],[9,0,2],[6,2,3]])
-B_col = Matrix([[1,2,3],[6,5,2],[9,0,2],[6,2,3]], 'col')
-C = Matrix([[4,7,2],[0,7,4],[1,7,8]])
-C_col = Matrix([[4,7,2],[0,7,4],[1,7,8]], 'col')
-v1 = Vector([3,6,1])
-v1_row = Vector([3,6,1], 'row')
-v2 = Vector([2,8,2])
-v2_row = Vector([2,8,2], 'row')
+A = M.Matrix([[1,2,3],[6,5,2],[9,0,2]])
+A_col = M.Matrix([[1,2,3],[6,5,2],[9,0,2]], 'col')
+B = M.Matrix([[1,2,3],[6,5,2],[9,0,2],[6,2,3]])
+B_col = M.Matrix([[1,2,3],[6,5,2],[9,0,2],[6,2,3]], 'col')
+C = M.Matrix([[4,7,2],[0,7,4],[1,7,8]])
+C_col = M.Matrix([[4,7,2],[0,7,4],[1,7,8]], 'col')
+v1 = M.Vector([3,6,1])
+v1_row = M.Vector([3,6,1], 'row')
+v2 = M.Vector([2,8,2])
+v2_row = M.Vector([2,8,2], 'row')
 
 probs = []
 
-'''begin Vector tests'''
+'''begin M.Vector tests'''
 def vecSlicing():
     if v1[0] != 3:
         probs.append('col vector slicing')
@@ -38,9 +41,9 @@ def vecEquivalence():
         probs.append('cross orientation vector equivalence')
 
 def vecAddition():
-    if (v1 + v1) != Vector([6,12,2]):
+    if (v1 + v1) != M.Vector([6,12,2]):
         probs.append('row vector addition values')
-    if (v1_row + v1_row) != Vector([6,12,2]):
+    if (v1_row + v1_row) != M.Vector([6,12,2]):
         probs.append('col vector addition values')
     if (v1 + v1).orientation != 'col':
         probs.append('col vector addition orientation not retained')
@@ -50,9 +53,9 @@ def vecAddition():
         probs.append('cross orientation vector addition orientation not row')
 
 def vecSubtraction():
-    if (v1 - v2) != Vector([1,-2,-1]):
+    if (v1 - v2) != M.Vector([1,-2,-1]):
         probs.append('row vector subtraction values')
-    if (v1_row - v2_row) != Vector([1,-2,-1]):
+    if (v1_row - v2_row) != M.Vector([1,-2,-1]):
         probs.append('col vector subtraction values')
     if (v1 - v2).orientation != 'col':
         probs.append('col vector subtraction orientation not retained')
@@ -70,11 +73,11 @@ def vecDot():
         probs.append('row vector dot product values')
 
 def vecCross():
-    if v1.cross(v2) != Vector([4,-4,12]):
+    if v1.cross(v2) != M.Vector([4,-4,12]):
         probs.append('col vector cross product values')
-    if v1.cross(v2_row) != Vector([4,-4,12]):
+    if v1.cross(v2_row) != M.Vector([4,-4,12]):
         probs.append('cross orientation vector cross product values')
-    if v1_row.cross(v2_row) != Vector([4,-4,12]):
+    if v1_row.cross(v2_row) != M.Vector([4,-4,12]):
         probs.append('row vector cross product values')
     if v2.cross(v1) != v1.cross(v2) * -1:
         probs.append('cross product order inversion not changing sign')
@@ -86,21 +89,21 @@ def vecUnit():
         probs.append('col vector isUnit')
     if v1_row.isUnit():
         probs.append('row vector isUnit')
-    if not Vector([.5,.5,.5,.5]).isUnit():
+    if not M.Vector([.5,.5,.5,.5]).isUnit():
         probs.append('R4 col unit not isUnit')
-    if not Vector([.5,.5,.5,.5], 'col').isUnit():
+    if not M.Vector([.5,.5,.5,.5], 'col').isUnit():
         probs.append('R4 row unit not isUnit')
 
 def vecNormalize():
-    if v1.normalize() != Vector([3/46,6/46,1/46]):
+    if v1.normalize() != M.Vector([3/46,6/46,1/46]):
         probs.append('normalize col vector')
-    if v1_row.normalize() != Vector([3/46,6/46,1/46]):
+    if v1_row.normalize() != M.Vector([3/46,6/46,1/46]):
         probs.append('normalize row vector')
 
 def vecExtend():
-    if v1.extend([5]) != Vector([3,6,1,5]):
+    if v1.extend([5]) != M.Vector([3,6,1,5]):
         probs.append('col vector extend')
-    if v1_row.extend([5]) != Vector([3,6,1,5]):
+    if v1_row.extend([5]) != M.Vector([3,6,1,5]):
         probs.append('row vector extend')
 
 def vecGet():
@@ -137,11 +140,11 @@ def vecDel():
     if v1_row_cop[0] != 1:
         probs.append('row vector delitem')
 
-'''begin Matrix tests'''
+'''begin M.Matrix tests'''
 def matSlicing():
-    if A[0] != Vector([1,2,3], 'row'):
+    if A[0] != M.Vector([1,2,3], 'row'):
         probs.append('row matrix slicing')
-    if A_col[0] != Vector([1,2,3]):
+    if A_col[0] != M.Vector([1,2,3]):
         probs.append('col matrix slicing')
 
 def matDimensions():
@@ -177,21 +180,21 @@ def matAddition():
         probs.append('col matrix addition orientation not preserved')
     if (A+A_col).orientation != 'row':
         probs.append('cross orientation matrix addition orientation not row')
-    if A+A != Matrix([[2,4,6],[12,10,4],[18,0,4]]):
+    if A+A != M.Matrix([[2,4,6],[12,10,4],[18,0,4]]):
         probs.append('row matrix addition values')
-    if A_col+A_col != Matrix([[2,4,6],[12,10,4],[18,0,4]], 'col'):
+    if A_col+A_col != M.Matrix([[2,4,6],[12,10,4],[18,0,4]], 'col'):
         probs.append('col matrix addition values')
-    if A+C_col != Matrix([[5,2,4],[13,12,9],[11,4,10]]):
+    if A+C_col != M.Matrix([[5,2,4],[13,12,9],[11,4,10]]):
         probs.append('cross orientation matrix addition values')
 
 def matSubtraction():
     if A-B != 'cannot subtract, matrices not same size':
         probs.append('addition size error not thrown')
-    if C-A != Matrix([[3,5,-1],[-6,2,2],[-8,7,6]]):
+    if C-A != M.Matrix([[3,5,-1],[-6,2,2],[-8,7,6]]):
         probs.append('row matrix subtraction values')
-    if C_col-A_col != Matrix([[3,-6,-8],[5,2,7],[-1,2,6]]):
+    if C_col-A_col != M.Matrix([[3,-6,-8],[5,2,7],[-1,2,6]]):
         probs.append('col matrix subtraction values')
-    if A-C_col != Matrix([[-3,2,2],[-1,-2,-5],[7,-4,-6]]):
+    if A-C_col != M.Matrix([[-3,2,2],[-1,-2,-5],[7,-4,-6]]):
         probs.append('cross orientation matrix subtraction values')
 
 def matMultiplication():
@@ -205,56 +208,56 @@ def matMultiplication():
         probs.append('col matrix multiplication orientation not col')
     if (A * A_col). orientation != 'row':
         probs.append('cross orientation matrix multiplication orientation not row')
-    if (A*5) != Matrix([[5,10,15],[30,25,10],[45,0,10]]):
+    if (A*5) != M.Matrix([[5,10,15],[30,25,10],[45,0,10]]):
         probs.append('row matrix scalar multiplication values')
-    if (A_col*5) != Matrix([[5,30,45],[10,25,0],[15,10,10]]):
+    if (A_col*5) != M.Matrix([[5,30,45],[10,25,0],[15,10,10]]):
         probs.append('col matrix scalar multiplication values')
-    if (A*A) != Matrix([[40,12,13],[54,37,32],[27,18,31]]):
+    if (A*A) != M.Matrix([[40,12,13],[54,37,32],[27,18,31]]):
         probs.append('row matrix multiplication values')
-    if (A_col*A_col) != Matrix([[40,12,13],[54,37,32],[27,18,31]], 'col'):
+    if (A_col*A_col) != M.Matrix([[40,12,13],[54,37,32],[27,18,31]], 'col'):
         probs.append('col matrix multiplication values')
-    if (A*C_col) != Matrix([[24,26,39],[63,43,57],[40,8,25]]):
+    if (A*C_col) != M.Matrix([[24,26,39],[63,43,57],[40,8,25]]):
         probs.append('cross orientation matrix multiplication values')
-    if (A*v1) != Vector([18,50,29]):
+    if (A*v1) != M.Vector([18,50,29]):
         probs.append('row matrix * col vector values')
-    if (A*v1_row) != Vector([18,50,29]):
+    if (A*v1_row) != M.Vector([18,50,29]):
         probs.append('row matrix * row vector values')
-    if (A_col*v1) != Vector([48,36,23]):
+    if (A_col*v1) != M.Vector([48,36,23]):
         probs.append('col matrix * col vector values')
-    if (A_col*v1_row) != Vector([48,36,23]):
+    if (A_col*v1_row) != M.Vector([48,36,23]):
         probs.append('col matrix * row vector values')
 
 def matGet():
-    if A[0] != Vector([1,2,3]) or A[1] != Vector([6,5,2]) or A[2] != Vector([9,0,2]):
+    if A[0] != M.Vector([1,2,3]) or A[1] != M.Vector([6,5,2]) or A[2] != M.Vector([9,0,2]):
         probs.append('row matrix getitem')
-    if A_col[0] != Vector([1,2,3]) or A_col[1] != Vector([6,5,2]) or A_col[2] != Vector([9,0,2]):
+    if A_col[0] != M.Vector([1,2,3]) or A_col[1] != M.Vector([6,5,2]) or A_col[2] != M.Vector([9,0,2]):
         probs.append('col matrix getitem')
 
 def matSet():
     A_cop = copy.deepcopy(A)
     A_col_cop = copy.deepcopy(A_col)
-    A_cop[2] = Vector([0,-1,8])
-    A_col_cop[2] = Vector([0,-1,8])
-    if A_cop[2] != Vector([0,-1,8]):
+    A_cop[2] = M.Vector([0,-1,8])
+    A_col_cop[2] = M.Vector([0,-1,8])
+    if A_cop[2] != M.Vector([0,-1,8]):
         probs.append('row matrix setitem')
-    if A_col_cop[2] != Vector([0,-1,8]):
+    if A_col_cop[2] != M.Vector([0,-1,8]):
         probs.append('col matrix setitem')
 
 def matDel():
     A_cop = copy.deepcopy(A)
     A_col_cop = copy.deepcopy(A_col)
     del A_cop[0]
-    if A_cop[0] != Vector([6,5,2]):
+    if A_cop[0] != M.Vector([6,5,2]):
         probs.append('row matrix delitem')
     del A_cop[0]
-    if A_cop[0] != Vector([9,0,2]):
+    if A_cop[0] != M.Vector([9,0,2]):
         probs.append('row matrix delitem')
 
     del A_col_cop[0]
-    if A_col_cop[0] != Vector([6,5,2]):
+    if A_col_cop[0] != M.Vector([6,5,2]):
         probs.append('col matrix delitem')
     del A_col_cop[0]
-    if A_col_cop[0] != Vector([9,0,2]):
+    if A_col_cop[0] != M.Vector([9,0,2]):
         probs.append('col matrix delitem')
 
 tests = [
