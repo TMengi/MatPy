@@ -65,7 +65,10 @@ class Matrix:
             if isinstance(data, int) or isinstance(data, float):
                 matrix[data_num] = Vector([data])
             if not isinstance(matrix[data_num], Vector):
-                raise Exception("Matrix invalid, args passed can't be turned into datator")
+                raise Exception("Matrix invalid, args passed can't be turned into vector")
+
+        for vector in matrix:
+            vector.orientation = orientation
 
         # checks that the incoming vectors are all the same length
         for vector in matrix:
@@ -103,6 +106,28 @@ class Matrix:
     def __eq__(self, other):
         # reinitialize objects so that they have the same orientation for comparison
         return Matrix(self).__dict__ == Matrix(other).__dict__
+
+    def __getitem__(self, index):
+        return self.matrix[index]
+
+    def __setitem__(self, index, value):
+        if isinstance(value, Vector):
+            value.orientation = self.orientation
+            self.matrix[index] = value
+        elif isinstance(value, list):
+            self.matrix[index] = Vector(value, self.orientation)
+        else:
+            return None
+
+    def __delitem__(self, index):
+        del self.matrix[index]
+        if self.orientation == 'row':
+            self.number_of_rows = len(self.matrix)
+            self.number_of_cols = len(self.matrix[0])
+        elif self.orientation == 'col':
+            self.number_of_rows = len(self.matrix[0])
+            self.number_of_cols = len(self.matrix)
+        self.dimensions = (self.number_of_rows, self.number_of_cols)
 
     # adds matrices by adding corresponding rows as vectors. returns another row matrix unless the two added matrices are both cols
     # considering making it just select the orientation of self. would be easier on the code but not sure if it would be better to have a predictable value when calling with other functions
@@ -154,27 +179,6 @@ class Matrix:
 
         else:
             return None
-
-    def __getitem__(self, index):
-        if self.orientation == 'col':
-            return Vector([row[index] for row in self.matrix])
-        else:
-            row = self.matrix[index]
-            row.orientation = 'row'
-            return row
-
-    def __setitem__(self, index, value):
-        if isinstance(value, Vector):
-            self.matrix[index] = value
-        elif isinstance(value, list):
-            self.matrix[index] = Vector(value)
-        else:
-            return None
-
-    def __delitem__(self, index):
-        del self.matrix[index]
-        self.number_of_rows -= 1
-        self.dimensions = (self.number_of_rows, self.number_of_cols)
 
     # checks if a matrix is square by checking if its dimensions are equivalent
     def isSquare(self):
@@ -493,7 +497,7 @@ class Vector:
         return str(self.printVec())
 
     def __repr__(self):
-        return ("{} dimensional Vector object with values {}".format(len(self), self.vector))
+        return ("{} dimensional {} Vector object with values {}".format(len(self), self.orientation, self.vector))
 
     def __eq__(self, other):
         # reinitialize objects so that they have the same orientation for comparison
@@ -642,6 +646,3 @@ A_col = Matrix([[1,2,3],[6,5,2],[9,0,2]], 'col')
 # print (A_col)
 # print (A+A)
 # print (A_col+A_col)
-
-for col in A_col:
-    print (col)
