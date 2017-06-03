@@ -55,21 +55,17 @@ class Matrix:
         if not orientation == 'row' and not orientation == 'col':
             raise Exception('orientation must be either "row" or "col"')
 
-        # if a column matrix, transpose the values so they can be parsed like normal
-        if orientation == 'col':
-            matrix = [[row[col_num] for row in matrix] for col_num, value in enumerate(matrix[0])]
-
         if isinstance(matrix, Matrix):
             matrix = matrix.matrix
 
-        # if an incoming row is not a vector, turn it into one if possible
-        for row_num, row in enumerate(matrix):
-            if isinstance(row, list):
-                matrix[row_num] = Vector(row)
-            if isinstance(row, int) or isinstance(row, float):
-                matrix[row_num] = Vector([row])
-            if not isinstance(matrix[row_num], Vector):
-                raise Exception("Matrix invalid, args passed can't be turned into vector")
+        # if an incoming piece of data is not a vector, turn it into one if possible
+        for data_num, data in enumerate(matrix):
+            if isinstance(data, list):
+                matrix[data_num] = Vector(data)
+            if isinstance(data, int) or isinstance(data, float):
+                matrix[data_num] = Vector([data])
+            if not isinstance(matrix[data_num], Vector):
+                raise Exception("Matrix invalid, args passed can't be turned into datator")
 
         # checks that the incoming vectors are all the same length
         for vector in matrix:
@@ -78,20 +74,24 @@ class Matrix:
 
         self.matrix = matrix
         self.orientation = orientation
-        self.number_of_rows = len(self.matrix)
-        self.number_of_cols = len(self.matrix[0])
+        if self.orientation == 'row':
+            self.number_of_rows = len(self.matrix)
+            self.number_of_cols = len(self.matrix[0])
+        elif self.orientation == 'col':
+            self.number_of_rows = len(self.matrix[0])
+            self.number_of_cols = len(self.matrix)
         self.dimensions = (self.number_of_rows, self.number_of_cols)
 
-    # number of rows, not the number of vectors. strategic decision for places where we had to take len() of objects which may not be matrices and may not have a self.number_of_rows value
+    # returns the number of vectors in a matrix
     def __len__(self):
-        return self.number_of_rows
+        if self.orientation == 'row':
+            return self.number_of_rows
+        else:
+            return self.number_of_cols
 
     # returns consecutive vectors in the matrix
     def __iter__(self):
-        if self.orientation == 'col':
-            return (x for x in [Vector([row[col_num] for row in self.matrix]) for col_num, col in enumerate(self.matrix)])
-        else:
-            return (x for x in self.matrix)
+        return (x for x in self.matrix)
 
     def __repr__(self):
         return ("{}x{} Matrix object with {}s {}".format(self.number_of_rows, self.number_of_cols, self.orientation, self.matrix))
@@ -498,6 +498,7 @@ class Vector:
         # reinitialize objects so that they have the same orientation for comparison
         return Vector(self).__dict__ == Vector(other).__dict__
 
+
     def __getitem__(self, index):
         return self.vector[index]
 
@@ -632,3 +633,8 @@ class Set:
             return Set([self[index] for index in (column for column in Matrix([vector for vector in self], 'cols').rref().checkPivots()['columns'])])
         else:
             return self
+
+A = Matrix([[1,2,3],[6,5,2],[9,0,2]])
+A_col = Matrix([[1,2,3],[6,5,2],[9,0,2]], 'col')
+print (A)
+print (A_col)
