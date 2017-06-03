@@ -105,15 +105,16 @@ class Matrix:
         return Matrix(self).__dict__ == Matrix(other).__dict__
 
     # adds matrices by adding corresponding rows as vectors. returns another row matrix unless the two added matrices are both cols
+    # considering making it just select the orientation of self. would be easier on the code but not sure if it would be better to have a predictable value when calling with other functions
     def __add__(self, other):
         if isinstance(other, int) or isinstance(other, float):
             return ('cannot add number to matrix')
         elif isinstance(other, Matrix):
             if self.dimensions == other.dimensions:
-                if self.orientation == 'col' and other.orientation == 'col':
-                    return Matrix([row + other[row_num] for row_num, row in enumerate(self)], 'col')
+                if self.orientation == other.orientation:
+                    return Matrix([vec + other[vec_num] for vec_num, vec in enumerate(self)], self.orientation)
                 else:
-                    return Matrix([row + Matrix(other, 'row')[row_num] for row_num, row in enumerate(Matrix(self, 'row'))])
+                    return Matrix([vec + Matrix(other)[vec_num] for vec_num, vec in enumerate(Matrix(self))])
             else:
                 return ('cannot add, matrices not same size')
         else:
@@ -636,5 +637,11 @@ class Set:
 
 A = Matrix([[1,2,3],[6,5,2],[9,0,2]])
 A_col = Matrix([[1,2,3],[6,5,2],[9,0,2]], 'col')
-print (A)
-print (A_col)
+
+# print (A)
+# print (A_col)
+# print (A+A)
+# print (A_col+A_col)
+
+for col in A_col:
+    print (col)
