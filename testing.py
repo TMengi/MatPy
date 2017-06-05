@@ -49,8 +49,8 @@ def vecAddition():
         probs.append('col vector addition orientation not retained')
     if (v1_row + v1_row).orientation != 'row':
         probs.append('row vector addition orientation not retained')
-    if (v1_row + v1).orientation != 'row':
-        probs.append('cross orientation vector addition orientation not row')
+    if (v1_row + v1).orientation != v1_row.orientation:
+        probs.append('cross orientation vector addition orientation not retained')
 
 def vecSubtraction():
     if (v1 - v2) != M.Vector([1,-2,-1]):
@@ -61,8 +61,8 @@ def vecSubtraction():
         probs.append('col vector subtraction orientation not retained')
     if (v1_row - v2_row).orientation != 'row':
         probs.append('row vector subtraction orientation not retained')
-    if (v1_row - v2).orientation != 'row':
-        probs.append('cross orientation vector subtraction orientation not row')
+    if (v1_row - v2).orientation != v1_row.orientation:
+        probs.append('cross orientation vector subtraction orientation not retained')
 
 def vecDot():
     if (v1 * v1) != v1.magnitude:
