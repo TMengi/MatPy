@@ -38,31 +38,25 @@ class Vector:
         self.magnitude = sum(x**2 for x in self)**0.5
         self.orientation = orientation
 
-    # adds vectors by adding corresponding values. returns another vector
+    # adds vectors by adding corresponding values. returns another vector with same orientation as self
     def __add__(self, other):
         if isinstance(other, int) or isinstance(other, float):
             return ('cannot add number to vector')
         elif isinstance(other, Vector):
             if self.dimension == other.dimension:
-                if self.orientation == 'row' and other.orientation == 'row':
-                    return Vector([self[index] + other.vector[index] for index, value in enumerate(self)], 'row')
-                else:
-                    return Vector([self[index] + other.vector[index] for index, value in enumerate(self)])
+                return Vector([self[index] + other.vector[index] for index, value in enumerate(self)], self.orientation)
             else:
                 return ('cannot add, vectors not in same dimension')
         else:
             return ('cannot add, unexpected object')
 
-    # subtracts vectors by subtracting corresponding values. returns another vector
+    # subtracts vectors by subtracting corresponding values. returns another vector with same orientation as self
     def __sub__(self, other):
         if isinstance(other, int) or isinstance(other, float):
             return ('cannot subtract number from vector')
         elif isinstance(other, Vector):
             if self.dimension == other.dimension:
-                if self.orientation == 'row' and other.orientation == 'row':
-                    return Vector([self[index] - other.vector[index] for index, value in enumerate(self)], 'row')
-                else:
-                    return Vector([self[index] - other.vector[index] for index, value in enumerate(self)])
+                return Vector([self[index] - other.vector[index] for index, value in enumerate(self)], self.orientation)
             else:
                 return ('cannot add, vectors not in same dimension')
         else:
