@@ -1,5 +1,237 @@
 import copy
 
+def buildVector():
+    # ask for dimensions and orientation
+    orientation = ''
+    m = int(input("how many components? "))
+    # ensure a valid orientation
+    while not orientation == 'row' and not orientation == 'col':
+        orientation = input('row or col vector? ')
+
+    user_vector = []
+
+    # ask for values until get a list of the correct length
+    while len(user_vector) != m:
+        user_vector = input("enter values separated by spaces: ").split(' ')
+
+    return Vector([int(x) for x in user_vector], orientation)
+
+def buildZeroVec(size):
+    return Vector([0 for x in range(size)])
+
+class Vector:
+    def __init__(self, vector, orientation='col'):
+        # checks for valid orientation
+        if not orientation == 'row' and not orientation == 'col':
+            raise Exception('orientation must be either "row" or "col"')
+
+        if isinstance(vector, Vector):
+            vector = list(vector)
+
+        #checks that all values are numbers
+        for n in vector:
+            if not isinstance(n, int) and not isinstance(n, float):
+                raise Exception('vector invalid, Args passed contains a non number')
+
+        self.vector = vector
+        self.dimension = len(vector)
+        self.magnitude = sum(x**2 for x in self)**0.5
+        self.orientation = orientation
+
+    # adds vectors by adding corresponding values. returns another vector
+    def __add__(self, other):
+        if isinstance(other, int) or isinstance(other, float):
+            return ('cannot add number to vector')
+        elif isinstance(other, Vector):
+            if self.dimension == other.dimension:
+                if self.orientation == 'row' and other.orientation == 'row':
+                    return Vector([self[index] + other.vector[index] for index, value in enumerate(self)], 'row')
+                else:
+                    return Vector([self[index] + other.vector[index] for index, value in enumerate(self)])
+            else:
+                return ('cannot add, vectors not in same dimension')
+        else:
+            return ('cannot add, unexpected object')
+
+    # subtracts vectors by subtracting corresponding values. returns another vector
+    def __sub__(self, other):
+        if isinstance(other, int) or isinstance(other, float):
+            return ('cannot subtract number from vector')
+        elif isinstance(other, Vector):
+            if self.dimension == other.dimension:
+                if self.orientation == 'row' and other.orientation == 'row':
+                    return Vector([self[index] - other.vector[index] for index, value in enumerate(self)], 'row')
+                else:
+                    return Vector([self[index] - other.vector[index] for index, value in enumerate(self)])
+            else:
+                return ('cannot add, vectors not in same dimension')
+        else:
+            return None
+
+    # normal multiplication for scalars (returns a vector). dot product for vectors (returns a number). got lazy for matrices and just reversed the order so it would redirect to Matrix.__mul__
+    def __mul__(self, other):
+        if isinstance(other, int) or isinstance(other, float):
+            return Vector([value * other for value in self])
+        elif isinstance(other, Vector):
+            return self.dot(other)
+        elif isinstance(other, Matrix):
+            return ('cannot multiply Vector by Matrix, only Matrix by Vector')
+        else:
+            return None
+
+    # returns the dimension of the vector, not its length because __len__ must return an int
+    def __len__(self):
+        return self.dimension
+
+    def __iter__(self):
+        return (x for x in self.vector)
+
+    # calls printVec
+    def __str__(self):
+        return str(self.printVec())
+
+    def __repr__(self):
+        return ("{} dimensional Vector object with values {}".format(len(self), self.vector))
+
+    def __eq__(self, other):
+        # reinitialize objects so that they have the same orientation for comparison
+        return Vector(self).__dict__ == Vector(other).__dict__
+
+    def __getitem__(self, index):
+        return self.vector[index]
+
+    def __delitem__(self, index):
+        del self.vector[index]
+
+    def __setitem__(self, index, value):
+        if isinstance(value, int) or isinstance(value, float):
+            self.vector[index] = value
+        else:
+            return None
+
+    # dot product of self with other
+    def dot(self, other):
+        return sum(self_value * other.vector[index] for index, self_value in enumerate(self))
+
+    def cross(self, other):
+        if len(self) == 3 and len(other) == 3:
+            return Vector([self[1]*other.vector[2]-self[2]*other.vector[1], self[2]*other.vector[0]-self[0]*other.vector[2], self[0]*other.vector[1]-self[1]*other.vector[0]])
+        else:
+            return ("cannot cross, vectors must be three dimensional")
+
+    # cross product of solf with other. requires three dimensional vectors
+    def printVec(self):
+        if self.orientation == 'col':
+            for comp_num, value in enumerate(self):
+                print ('|', end='')
+                if isinstance(value, int):
+                    print ('%i|' % value)
+                elif isinstance(value, float):
+                    if value.is_integer():
+                        print ('%i|' % int(value))
+                    else:
+                        print ('%.2f|' % value)
+            return ('')
+        if self.orientation == 'row':
+            print ('|', end='')
+            for value in self:
+                if isinstance(value, int):
+                    print ('%i ' % value, end='')
+                elif isinstance(value, float):
+                    if value.is_integer():
+                        print ('%i ' % int(value), end='')
+                    else:
+                        print ('%.2f ' % value, end='')
+            print ('\b|')
+            return ('')
+
+    # just looks at magnitude and decides if a unit vector or not
+    def isUnit(self):
+        if self.magnitude == 1.0:
+            return True
+        else:
+            return False
+
+    # divides a vector by its magnitude
+    def normalize(self):
+        return self * (1/self.magnitude)
+
+    # extends a vector by tacking a numbers(s) onto the end
+    def extend(self, other):
+        new = copy.deepcopy(self.vector)
+        if not isinstance(other, int) and not isinstance(other, list) and not isinstance(other, Vector):
+            return ('invalid input, cannot extend vector')
+        if isinstance(other, int):
+            other = [other]
+        if isinstance(other, Vector):
+            other = other.vector
+        new.extend(other)
+        return Vector(new)
+
+def leastSquaresSol(A, b):
+    sol = (A.transpose() * A).extend(A.transpose() * b).rref().transpose().pop()
+    sol.orientation = 'col'
+    return sol
+
+class Set:
+    def __init__(self, set_vectors):
+        for vector in set_vectors:
+            if len(vector) != len(set_vectors[0]):
+                raise Exception('Set invalid, check vector dimensions')
+            elif not isinstance(vector, Vector):
+                raise Exception('set invalid, Args passed contains a non Vector')
+        else:
+            self.set_vectors = set_vectors
+            self.dimension = len(set_vectors[0])
+
+    # length of set is the number of vectors in the set
+    def __len__(self):
+        return len(self.set_vectors)
+
+    def __iter__(self):
+        return (x for x in self.set_vectors)
+
+    def __eq__(self, other):
+        return self.__dict__ == other.__dict__
+
+    # calls printSet
+    def __str__(self):
+        return self.printSet()
+
+    def __repr__(self):
+        return ("Set object containg {} vectors: {}".format(len(self), self.set_vectors))
+
+    def __getitem__(self, index):
+        return self.set_vectors[index]
+
+    def __delitem__(self, index):
+        del self.set_vectors[index]
+
+    def printSet(self):
+        for comp_num, value in enumerate(self[0]):
+            print ("{", end='')
+            for vec_num, vector in enumerate(self):
+                if isinstance(vector[comp_num], float):
+                    if vector[comp_num].is_integer():
+                        print ("|%i|" % int(vector[comp_num]), end = ' ')
+                    else:
+                        print ("|%.2f|" % vector[comp_num], end = ' ')
+                if isinstance(vector[comp_num], int):
+                    print ("|%i|" % vector[comp_num], end = ' ')
+            print ("\b}")
+        return ('')
+
+    # creates a Matrix where each of the set vectors is a row and then computes rref to check for free parameter columns. if there are none, the set is linearly independent
+    def isIndependent(self):
+        return Matrix([vector for vector in self], 'cols').rref().checkPivots()['rank'] == len(self)
+
+    # removes nontrivial dependence relations from a set by taking a subset of only those vectors which become pivot columns in rref
+    def makeIndependent(self):
+        if not self.isIndependent():
+            return Set([self[index] for index in (column for column in Matrix([vector for vector in self], 'cols').rref().checkPivots()['columns'])])
+        else:
+            return self
+
 # lets the user create a matrix by specifying dimensions and an orientation then calling inputData
 def buildMatrix():
     # ask for dimensions and orientation
@@ -400,235 +632,3 @@ class Matrix:
     # computes rref and checks which columns are pivots, then takes those columns out of the original matrix and makes a set out of them
     def image(self):
         return Set([self.transpose()[column] for column in self.checkPivots()['columns']])
-
-def buildVector():
-    # ask for dimensions and orientation
-    orientation = ''
-    m = int(input("how many components? "))
-    # ensure a valid orientation
-    while not orientation == 'row' and not orientation == 'col':
-        orientation = input('row or col vector? ')
-
-    user_vector = []
-
-    # ask for values until get a list of the correct length
-    while len(user_vector) != m:
-        user_vector = input("enter values separated by spaces: ").split(' ')
-
-    return Vector([int(x) for x in user_vector], orientation)
-
-def buildZeroVec(size):
-    return Vector([0 for x in range(size)])
-
-class Vector:
-    def __init__(self, vector, orientation='col'):
-        # checks for valid orientation
-        if not orientation == 'row' and not orientation == 'col':
-            raise Exception('orientation must be either "row" or "col"')
-
-        if isinstance(vector, Vector):
-            vector = list(vector)
-
-        #checks that all values are numbers
-        for n in vector:
-            if not isinstance(n, int) and not isinstance(n, float):
-                raise Exception('vector invalid, Args passed contains a non number')
-
-        self.vector = vector
-        self.dimension = len(vector)
-        self.magnitude = sum(x**2 for x in self)**0.5
-        self.orientation = orientation
-
-    # adds vectors by adding corresponding values. returns another vector
-    def __add__(self, other):
-        if isinstance(other, int) or isinstance(other, float):
-            return ('cannot add number to vector')
-        elif isinstance(other, Vector):
-            if self.dimension == other.dimension:
-                if self.orientation == 'row' and other.orientation == 'row':
-                    return Vector([self[index] + other.vector[index] for index, value in enumerate(self)], 'row')
-                else:
-                    return Vector([self[index] + other.vector[index] for index, value in enumerate(self)])
-            else:
-                return ('cannot add, vectors not in same dimension')
-        else:
-            return ('cannot add, unexpected object')
-
-    # subtracts vectors by subtracting corresponding values. returns another vector
-    def __sub__(self, other):
-        if isinstance(other, int) or isinstance(other, float):
-            return ('cannot subtract number from vector')
-        elif isinstance(other, Vector):
-            if self.dimension == other.dimension:
-                if self.orientation == 'row' and other.orientation == 'row':
-                    return Vector([self[index] - other.vector[index] for index, value in enumerate(self)], 'row')
-                else:
-                    return Vector([self[index] - other.vector[index] for index, value in enumerate(self)])
-            else:
-                return ('cannot add, vectors not in same dimension')
-        else:
-            return None
-
-    # normal multiplication for scalars (returns a vector). dot product for vectors (returns a number). got lazy for matrices and just reversed the order so it would redirect to Matrix.__mul__
-    def __mul__(self, other):
-        if isinstance(other, int) or isinstance(other, float):
-            return Vector([value * other for value in self])
-        elif isinstance(other, Vector):
-            return self.dot(other)
-        elif isinstance(other, Matrix):
-            return ('cannot multiply Vector by Matrix, only Matrix by Vector')
-        else:
-            return None
-
-    # returns the dimension of the vector, not its length because __len__ must return an int
-    def __len__(self):
-        return self.dimension
-
-    def __iter__(self):
-        return (x for x in self.vector)
-
-    # calls printVec
-    def __str__(self):
-        return str(self.printVec())
-
-    def __repr__(self):
-        return ("{} dimensional Vector object with values {}".format(len(self), self.vector))
-
-    def __eq__(self, other):
-        # reinitialize objects so that they have the same orientation for comparison
-        return Vector(self).__dict__ == Vector(other).__dict__
-
-    def __getitem__(self, index):
-        return self.vector[index]
-
-    def __delitem__(self, index):
-        del self.vector[index]
-
-    def __setitem__(self, index, value):
-        if isinstance(value, int) or isinstance(value, float):
-            self.vector[index] = value
-        else:
-            return None
-
-    # dot product of self with other
-    def dot(self, other):
-        return sum(self_value * other.vector[index] for index, self_value in enumerate(self))
-
-    def cross(self, other):
-        if len(self) == 3 and len(other) == 3:
-            return Vector([self[1]*other.vector[2]-self[2]*other.vector[1], self[2]*other.vector[0]-self[0]*other.vector[2], self[0]*other.vector[1]-self[1]*other.vector[0]])
-        else:
-            return ("cannot cross, vectors must be three dimensional")
-
-    # cross product of solf with other. requires three dimensional vectors
-    def printVec(self):
-        if self.orientation == 'col':
-            for comp_num, value in enumerate(self):
-                print ('|', end='')
-                if isinstance(value, int):
-                    print ('%i|' % value)
-                elif isinstance(value, float):
-                    if value.is_integer():
-                        print ('%i|' % int(value))
-                    else:
-                        print ('%.2f|' % value)
-            return ('')
-        if self.orientation == 'row':
-            print ('|', end='')
-            for value in self:
-                if isinstance(value, int):
-                    print ('%i ' % value, end='')
-                elif isinstance(value, float):
-                    if value.is_integer():
-                        print ('%i ' % int(value), end='')
-                    else:
-                        print ('%.2f ' % value, end='')
-            print ('\b|')
-            return ('')
-
-    # just looks at magnitude and decides if a unit vector or not
-    def isUnit(self):
-        if self.magnitude == 1.0:
-            return True
-        else:
-            return False
-
-    # divides a vector by its magnitude
-    def normalize(self):
-        return self * (1/self.magnitude)
-
-    # extends a vector by tacking a numbers(s) onto the end
-    def extend(self, other):
-        new = copy.deepcopy(self.vector)
-        if not isinstance(other, int) and not isinstance(other, list) and not isinstance(other, Vector):
-            return ('invalid input, cannot extend vector')
-        if isinstance(other, int):
-            other = [other]
-        if isinstance(other, Vector):
-            other = other.vector
-        new.extend(other)
-        return Vector(new)
-
-def leastSquaresSol(A, b):
-    sol = (A.transpose() * A).extend(A.transpose() * b).rref().transpose().pop()
-    sol.orientation = 'col'
-    return sol
-
-class Set:
-    def __init__(self, set_vectors):
-        for vector in set_vectors:
-            if len(vector) != len(set_vectors[0]):
-                raise Exception('Set invalid, check vector dimensions')
-            elif not isinstance(vector, Vector):
-                raise Exception('set invalid, Args passed contains a non Vector')
-        else:
-            self.set_vectors = set_vectors
-            self.dimension = len(set_vectors[0])
-
-    # length of set is the number of vectors in the set
-    def __len__(self):
-        return len(self.set_vectors)
-
-    def __iter__(self):
-        return (x for x in self.set_vectors)
-
-    def __eq__(self, other):
-        return self.__dict__ == other.__dict__
-
-    # calls printSet
-    def __str__(self):
-        return self.printSet()
-
-    def __repr__(self):
-        return ("Set object containg {} vectors: {}".format(len(self), self.set_vectors))
-
-    def __getitem__(self, index):
-        return self.set_vectors[index]
-
-    def __delitem__(self, index):
-        del self.set_vectors[index]
-
-    def printSet(self):
-        for comp_num, value in enumerate(self[0]):
-            print ("{", end='')
-            for vec_num, vector in enumerate(self):
-                if isinstance(vector[comp_num], float):
-                    if vector[comp_num].is_integer():
-                        print ("|%i|" % int(vector[comp_num]), end = ' ')
-                    else:
-                        print ("|%.2f|" % vector[comp_num], end = ' ')
-                if isinstance(vector[comp_num], int):
-                    print ("|%i|" % vector[comp_num], end = ' ')
-            print ("\b}")
-        return ('')
-
-    # creates a Matrix where each of the set vectors is a row and then computes rref to check for free parameter columns. if there are none, the set is linearly independent
-    def isIndependent(self):
-        return Matrix([vector for vector in self], 'cols').rref().checkPivots()['rank'] == len(self)
-
-    # removes nontrivial dependence relations from a set by taking a subset of only those vectors which become pivot columns in rref
-    def makeIndependent(self):
-        if not self.isIndependent():
-            return Set([self[index] for index in (column for column in Matrix([vector for vector in self], 'cols').rref().checkPivots()['columns'])])
-        else:
-            return self
