@@ -65,11 +65,11 @@ def vecSubtraction():
         probs.append('cross orientation vector subtraction orientation not retained')
 
 def vecDot():
-    if (v1 * v1) != v1.magnitude:
+    if (v1 * v1) != v1.magnitude**2:
         probs.append('col vector dot product values')
-    if (v1 * v1_row) != v1.magnitude:
+    if (v1 * v1_row) != v1.magnitude**2:
         probs.append('cross orientation vector dot product values')
-    if (v1_row * v1_row) != v1.magnitude:
+    if (v1_row * v1_row) != v1.magnitude**2:
         probs.append('row vector dot product values')
 
 def vecCross():
