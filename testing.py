@@ -197,7 +197,7 @@ def matDimensions():
 def matLength():
     if len(B) != 4:
         probs.append('row matrix length')
-    if len(B_col) != 3:
+    if len(B_col) != 4:
         probs.append('col matrix length')
 
 def matIterate():
