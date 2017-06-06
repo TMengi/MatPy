@@ -191,7 +191,7 @@ class Set:
         return (x for x in self.set_vectors)
 
     def __eq__(self, other):
-        return self.makeRow().__dict__ == other.makeRow().__dict__
+        return self.__dict__ == other.__dict__
 
     # calls printSet
     def __str__(self):
@@ -337,7 +337,7 @@ class Matrix:
 
     def __eq__(self, other):
         # reinitialize objects so that they have the same orientation for comparison
-        return self.makeRow().__dict__ == other.makeRow().__dict__
+        return self.makeOrientationRow().__dict__ == other.makeOrientationRow().__dict__
 
     # returns the vector at the specified index, meaning that it selects in orientaiton specified manner: row number for row matrix or col number for col matrix
     def __getitem__(self, index):
@@ -376,8 +376,8 @@ class Matrix:
             if self.dimensions == other.dimensions:
                 # need a specific case for cross orientation
                 if self.orientation != other.orientation:
-                    return Matrix([vec + other.makeRow()[vec_num] for vec_num, vec in enumerate(self.makeRow())], self.orientation)
-                # both rows or cross orientation can both be handled by using the Matrix.makeRow method
+                    return Matrix([vec + other.makeOrientationRow()[vec_num] for vec_num, vec in enumerate(self.makeOrientationRow())], self.orientation)
+                # both rows or cross orientation can both be handled by using the Matrix.makeOrientationRow method
                 else:
                     return Matrix([vec + other[vec_num] for vec_num, vec in enumerate(self)], self.orientation)
             else:
@@ -393,8 +393,8 @@ class Matrix:
             if self.dimensions == other.dimensions:
                 # need a specific case for cross orientation
                 if self.orientation != other.orientation:
-                    return Matrix([vec - other.makeRow()[vec_num] for vec_num, vec in enumerate(self.makeRow())], self.orientation)
-                # both rows or cross orientation can both be handled by using the Matrix.makeRow method
+                    return Matrix([vec - other.makeOrientationRow()[vec_num] for vec_num, vec in enumerate(self.makeOrientationRow())], self.orientation)
+                # both rows or cross orientation can both be handled by using the Matrix.makeOrientationRow method
                 else:
                     return Matrix([vec - other[vec_num] for vec_num, vec in enumerate(self)], self.orientation)
             else:
@@ -423,7 +423,7 @@ class Matrix:
             return None
 
     # takes a matrix and changes the orientation to rwos without changing the values
-    def makeRow(self):
+    def makeOrientationRow(self):
         if self.orientation == 'row':
             return self
         if self.orientation == 'col':
