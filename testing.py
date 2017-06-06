@@ -6,6 +6,12 @@ v1 = M.Vector([3,6,1])
 v1_row = M.Vector([3,6,1], 'row')
 v2 = M.Vector([2,8,2])
 v2_row = M.Vector([2,8,2], 'row')
+v3 = M.Vector([4,0,1])
+v3_row = M.Vector([4,0,1], 'row')
+
+s1 = M.Set([v1, v2, v3])
+s1_row = M.Set([v1_row, v2_row, v3_row])
+
 A = M.Matrix([[1,2,3],[6,5,2],[9,0,2]])
 A_col = M.Matrix([[1,2,3],[6,5,2],[9,0,2]], 'col')
 B = M.Matrix([[1,2,3],[6,5,2],[9,0,2],[6,2,3]])
@@ -151,13 +157,13 @@ def vecDel():
         probs.append('row vector delitem')
 
 '''begin Set tests'''
-def setLen():
+def setLength():
     pass
 
-def setIter():
+def setIterate():
     pass
 
-def setEq():
+def setEquivalence():
     pass
 
 def setGet():
@@ -312,6 +318,15 @@ vecGet(),
 vecSet(),
 vecDel(),
 # all vector tests have been completed and included here
+setLength(),
+setIterate(),
+setEquivalence(),
+setGet(),
+setSet(),
+setDel(),
+setIsIndependent(),
+setMakeIndpendent(),
+# all Set tests have been included here
 matSlicing(),
 matDimensions(),
 matLength(),
