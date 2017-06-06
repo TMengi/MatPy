@@ -221,7 +221,9 @@ def matAddition():
     if (A_col+A_col).orientation != 'col':
         probs.append('col matrix addition orientation not preserved')
     if (A+A_col).orientation != 'row':
-        probs.append('cross orientation matrix addition orientation not row')
+        probs.append('cross orientation (r+c) matrix addition orientation not preserved')
+    if (A_col+A).orientation != 'col':
+        probs.append('cross orientation (c+r) matrix addition orientation not preserved')
     if A+A != M.Matrix([[2,4,6],[12,10,4],[18,0,4]]):
         probs.append('row matrix addition values')
     if A_col+A_col != M.Matrix([[2,4,6],[12,10,4],[18,0,4]], 'col'):

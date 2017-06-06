@@ -366,8 +366,7 @@ class Matrix:
             self.number_of_cols = len(self.matrix)
         self.dimensions = (self.number_of_rows, self.number_of_cols)
 
-    # adds matrices by adding corresponding rows as vectors. returns another row matrix unless the two added matrices are both cols
-    # considering making it just select the orientation of self. would be easier on the code but not sure if it would be better to have a predictable value when calling with other functions
+    # adds matrices by adding corresponding rows as vectors. returns a matrix with same orientation as self
     def __add__(self, other):
         if isinstance(other, int) or isinstance(other, float):
             return ('cannot add number to matrix')
@@ -375,22 +374,29 @@ class Matrix:
             return ('cannot add Vector to matrix')
         elif isinstance(other, Matrix):
             if self.dimensions == other.dimensions:
-                    return Matrix([vec + Matrix(other)[vec_num] for vec_num, vec in enumerate(Matrix(self))], self.orientation)
+                # need a specific case for cross orientation
+                if self.orientation != other.orientation:
+                    return Matrix([vec + other.makeRow()[vec_num] for vec_num, vec in enumerate(self.makeRow())], self.orientation)
+                # both rows or cross orientation can both be handled by using the Matrix.makeRow method
+                else:
+                    return Matrix([vec + other[vec_num] for vec_num, vec in enumerate(self)], self.orientation)
             else:
                 return ('cannot add, matrices not same size')
         else:
             return ('cannot add, unexpected type')
 
-    # subtracts matrices by subtracting corresponding rows as vectors. returns another row matrix unless the two subtracted matrices are both cols
+    # subtracts matrices by subtracting corresponding rows as vectors. returns a matrix with same orientation as self
     def __sub__(self, other):
         if isinstance(other, int) or isinstance(other, float):
             return ('cannot add number to matrix')
         elif isinstance(other, Matrix):
             if self.dimensions == other.dimensions:
-                if self.orientation == 'col' and other.orientation == 'col':
-                    return Matrix([row - other[row_num] for row_num, row in enumerate(self)], 'col')
+                # need a specific case for cross orientation
+                if self.orientation != other.orientation:
+                    return Matrix([vec - other.makeRow()[vec_num] for vec_num, vec in enumerate(self.makeRow())], self.orientation)
+                # both rows or cross orientation can both be handled by using the Matrix.makeRow method
                 else:
-                    return Matrix([row - Matrix(other, 'row')[row_num] for row_num, row in enumerate(Matrix(self, 'row'))])
+                    return Matrix([vec - other[vec_num] for vec_num, vec in enumerate(self)], self.orientation)
             else:
                 return ('cannot subtract, matrices not same size')
         else:
