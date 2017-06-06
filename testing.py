@@ -14,6 +14,7 @@ s1_row = M.Set([v1_row, v2_row, v3_row])
 
 A = M.Matrix([[1,2,3],[6,5,2],[9,0,2]])
 A_col = M.Matrix([[1,2,3],[6,5,2],[9,0,2]], 'col')
+A_alt = M.Matrix([[1,6,9],[2,5,0],[3,2,2]], 'col')
 B = M.Matrix([[1,2,3],[6,5,2],[9,0,2],[6,2,3]])
 B_col = M.Matrix([[1,2,3],[6,5,2],[9,0,2],[6,2,3]], 'col')
 C = M.Matrix([[4,7,2],[0,7,4],[1,7,8]])
@@ -209,8 +210,8 @@ def matIterate():
             probs.append('col matrix iteration')
 
 def matEquivalence():
-    if A.transpose() != A_col:
-        probs.append('not equating row version with col version')
+    if A != A_alt:
+        probs.append("cross orientation matrix equivalence")
 
 def matAddition():
     if A+B != 'cannot add, matrices not same size':
