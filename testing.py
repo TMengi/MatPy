@@ -95,9 +95,9 @@ def vecUnit():
         probs.append('R4 row unit not isUnit')
 
 def vecNormalize():
-    if v1.normalize() != M.Vector([3/46,6/46,1/46]):
+    if v1.normalize() != M.Vector([3/(46)**.5,6/(46)**.5,1/(46)**.5]):
         probs.append('normalize col vector')
-    if v1_row.normalize() != M.Vector([3/46,6/46,1/46]):
+    if v1_row.normalize() != M.Vector([3/(46)**.5,6/(46)**.5,1/(46)**.5]):
         probs.append('normalize row vector')
 
 def vecExtend():
@@ -275,6 +275,7 @@ vecExtend(),
 vecGet(),
 vecSet(),
 vecDel(),
+# all vector tests have been completed and included here
 matSlicing(),
 matDimensions(),
 matLength(),
