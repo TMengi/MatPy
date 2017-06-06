@@ -191,7 +191,7 @@ class Set:
         return (x for x in self.set_vectors)
 
     def __eq__(self, other):
-        return self.__dict__ == other.__dict__
+        return self.makeRow().__dict__ == other.makeRow().__dict__
 
     # calls printSet
     def __str__(self):
@@ -337,20 +337,25 @@ class Matrix:
 
     def __eq__(self, other):
         # reinitialize objects so that they have the same orientation for comparison
-        return Matrix(self).__dict__ == Matrix(other).__dict__
+        return self.makeRow().__dict__ == other.makeRow().__dict__
 
+    # returns the vector at the specified index, meaning that it selects in orientaiton specified manner: row number for row matrix or col number for col matrix
     def __getitem__(self, index):
         return self.matrix[index]
 
+    # checks for correct length then sets the value at the specified index
     def __setitem__(self, index, value):
+        if not len(value) == len(self[0]):
+            return ('invalid, check value dimension')
         if isinstance(value, Vector):
             value.orientation = self.orientation
             self.matrix[index] = value
         elif isinstance(value, list):
             self.matrix[index] = Vector(value, self.orientation)
         else:
-            return None
+            return ('invalid, value passed is not a list or Vector')
 
+    # deletes the vector at the specified index and reassigns dimension values
     def __delitem__(self, index):
         del self.matrix[index]
         if self.orientation == 'row':
@@ -366,12 +371,11 @@ class Matrix:
     def __add__(self, other):
         if isinstance(other, int) or isinstance(other, float):
             return ('cannot add number to matrix')
+        if isinstance(other, Vector):
+            return ('cannot add Vector to matrix')
         elif isinstance(other, Matrix):
             if self.dimensions == other.dimensions:
-                if self.orientation == other.orientation:
-                    return Matrix([vec + other[vec_num] for vec_num, vec in enumerate(self)], self.orientation)
-                else:
-                    return Matrix([vec + Matrix(other)[vec_num] for vec_num, vec in enumerate(Matrix(self))])
+                    return Matrix([vec + Matrix(other)[vec_num] for vec_num, vec in enumerate(Matrix(self))], self.orientation)
             else:
                 return ('cannot add, matrices not same size')
         else:
@@ -411,6 +415,12 @@ class Matrix:
 
         else:
             return None
+
+    def makeRow(self):
+        if self.orientation == 'row':
+            return self
+        if self.orientation == 'col':
+            return Matrix([Vector([col[row_num] for col in self]) for row_num, value in enumerate(self[0])])
 
     # checks if a matrix is square by checking if its dimensions are equivalent
     def isSquare(self):
