@@ -157,28 +157,28 @@ def vecDel():
         probs.append('row vector delitem')
 
 '''begin Set tests'''
-def setLength():
+def setLength(): # empty
     pass
 
-def setIterate():
+def setIterate(): # empty
     pass
 
-def setEquivalence():
+def setEquivalence(): # empty
     pass
 
-def setGet():
+def setGet(): # empty
     pass
 
-def setSet():
+def setSet(): # empty
     pass
 
-def setDel():
+def setDel(): # empty
     pass
 
-def setIsIndependent():
+def setIsIndependent(): # empty
     pass
 
-def setMakeIndpendent():
+def setMakeIndpendent(): # empty
     pass
 
 '''begin Matrix tests'''
@@ -301,6 +301,56 @@ def matDel():
     if A_col_cop[0] != M.Vector([9,0,2]):
         probs.append('col matrix delitem')
 
+def matIsSquare():
+    pass
+
+def matCheckLead():
+    pass
+
+def matSwapRows(): # empty
+    pass
+
+def matIsRREF(): # empty
+    pass
+
+def matRREF(): # empty
+    pass
+
+def matElimNegs(): # empty
+    pass
+
+def matCheckPivots(): # empty
+    pass
+
+def matCountSolutions(): # empty
+    pass
+
+def matTranspose(): # empty
+    pass
+
+def matIsOrthogonal(): # empty
+    pass
+
+def matIsSymmetric(): # empty
+    pass
+
+def matisInvertible(): # empty
+    pass
+
+def matInverse(): # empty
+    pass
+
+def matExtend(): # empty
+    pass
+
+def matPop(): # empty
+    pass
+
+def matImage(): # empty
+    pass
+
+
+
 tests = [
 vecSlicing(),
 vecLength(),
@@ -317,7 +367,7 @@ vecExtend(),
 vecGet(),
 vecSet(),
 vecDel(),
-# all vector tests have been completed and included here
+# all vector tests have been completed and included
 setLength(),
 setIterate(),
 setEquivalence(),
@@ -326,7 +376,7 @@ setSet(),
 setDel(),
 setIsIndependent(),
 setMakeIndpendent(),
-# all Set tests have been included here
+# all Set tests have been included
 matSlicing(),
 matDimensions(),
 matLength(),
@@ -338,6 +388,21 @@ matMultiplication(),
 matGet(),
 matSet(),
 matDel(),
+matSwapRows(),
+matIsRREF(),
+matRREF(),
+matElimNegs(),
+matCheckPivots(),
+matCountSolutions(),
+matTranspose(),
+matIsOrthogonal(),
+matIsSymmetric(),
+matisInvertible(),
+matInverse(),
+matExtend(),
+matPop(),
+matImage(),
+# all Matrix tests have been included
 ]
 
 if __name__ == '__main__':

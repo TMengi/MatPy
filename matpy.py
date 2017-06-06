@@ -486,7 +486,6 @@ class Matrix:
 
     # checks the current state of the matrix with isRREF
     def update(self):
-        # print (self)
         return self.isRREF()
 
     # puts a matrix into rref by continuously calling update and fixing the problem returned
