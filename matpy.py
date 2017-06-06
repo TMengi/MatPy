@@ -169,11 +169,16 @@ def leastSquaresSol(A, b):
 
 class Set:
     def __init__(self, set_vectors):
+        if not isinstance(set_vectors, list):
+            raise Exception('Set can only be created from a list')
+
         for vector in set_vectors:
             if len(vector) != len(set_vectors[0]):
                 raise Exception('Set invalid, check vector dimensions')
-            elif not isinstance(vector, Vector):
-                raise Exception('set invalid, Args passed contains a non Vector')
+            if isinstance(vector, list):
+                vector = Vector(vector)
+            if not isinstance(vector, Vector):
+                raise Exception('set invalid, Args passed canont be turned into a Vector')
         else:
             self.set_vectors = set_vectors
             self.dimension = len(set_vectors[0])
@@ -201,6 +206,7 @@ class Set:
     def __delitem__(self, index):
         del self.set_vectors[index]
 
+    # always prints as columns just for readability
     def printSet(self):
         for comp_num, value in enumerate(self[0]):
             print ("{", end='')
