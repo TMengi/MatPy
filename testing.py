@@ -2,16 +2,16 @@ import matpy as M
 import copy
 
 # test all the shit
+v1 = M.Vector([3,6,1])
+v1_row = M.Vector([3,6,1], 'row')
+v2 = M.Vector([2,8,2])
+v2_row = M.Vector([2,8,2], 'row')
 A = M.Matrix([[1,2,3],[6,5,2],[9,0,2]])
 A_col = M.Matrix([[1,2,3],[6,5,2],[9,0,2]], 'col')
 B = M.Matrix([[1,2,3],[6,5,2],[9,0,2],[6,2,3]])
 B_col = M.Matrix([[1,2,3],[6,5,2],[9,0,2],[6,2,3]], 'col')
 C = M.Matrix([[4,7,2],[0,7,4],[1,7,8]])
 C_col = M.Matrix([[4,7,2],[0,7,4],[1,7,8]], 'col')
-v1 = M.Vector([3,6,1])
-v1_row = M.Vector([3,6,1], 'row')
-v2 = M.Vector([2,8,2])
-v2_row = M.Vector([2,8,2], 'row')
 
 probs = []
 
@@ -64,12 +64,22 @@ def vecSubtraction():
     if (v1_row - v2).orientation != v1_row.orientation:
         probs.append('cross orientation vector subtraction orientation not retained')
 
+def vecScalarMul():
+    if v1 * 5 != M.Vector([15,30,5]):
+        probs.append("col vector scalar multiplication values")
+    if (v1 * 5).orientation != v1.orientation:
+        probs.append("col vector scalar multiplication orientation not preserved")
+    if v1_row * 5 != M.Vector([15,30,5]):
+        probs.append("row vector scalar multiplication values")
+    if (v1_row * 5).orientation != v1_row.orientation:
+        probs.append("row vector scalar multiplication orientation not preserved")
+
 def vecDot():
-    if (v1 * v1) != v1.magnitude:
+    if (v1 * v1) != v1.magnitude**2:
         probs.append('col vector dot product values')
-    if (v1 * v1_row) != v1.magnitude:
+    if (v1 * v1_row) != v1.magnitude**2:
         probs.append('cross orientation vector dot product values')
-    if (v1_row * v1_row) != v1.magnitude:
+    if (v1_row * v1_row) != v1.magnitude**2:
         probs.append('row vector dot product values')
 
 def vecCross():
@@ -95,9 +105,9 @@ def vecUnit():
         probs.append('R4 row unit not isUnit')
 
 def vecNormalize():
-    if v1.normalize() != M.Vector([3/46,6/46,1/46]):
+    if v1.normalize() != M.Vector([3/(46)**.5,6/(46)**.5,1/(46)**.5]):
         probs.append('normalize col vector')
-    if v1_row.normalize() != M.Vector([3/46,6/46,1/46]):
+    if v1_row.normalize() != M.Vector([3/(46)**.5,6/(46)**.5,1/(46)**.5]):
         probs.append('normalize row vector')
 
 def vecExtend():
@@ -267,6 +277,7 @@ vecIterate(),
 vecEquivalence(),
 vecAddition(),
 vecSubtraction(),
+vecScalarMul(),
 vecDot(),
 vecCross(),
 vecUnit(),
@@ -275,6 +286,7 @@ vecExtend(),
 vecGet(),
 vecSet(),
 vecDel(),
+# all vector tests have been completed and included here
 matSlicing(),
 matDimensions(),
 matLength(),

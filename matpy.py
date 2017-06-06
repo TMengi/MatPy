@@ -65,7 +65,7 @@ class Vector:
     # normal multiplication for scalars (returns a vector). dot product for vectors (returns a number). got lazy for matrices and just reversed the order so it would redirect to Matrix.__mul__
     def __mul__(self, other):
         if isinstance(other, int) or isinstance(other, float):
-            return Vector([value * other for value in self])
+            return Vector([value * other for value in self], self.orientation)
         elif isinstance(other, Vector):
             return self.dot(other)
         elif isinstance(other, Matrix):
@@ -107,13 +107,13 @@ class Vector:
     def dot(self, other):
         return sum(self_value * other.vector[index] for index, self_value in enumerate(self))
 
+    # cross product of solf with other. requires three dimensional vectors
     def cross(self, other):
         if len(self) == 3 and len(other) == 3:
             return Vector([self[1]*other.vector[2]-self[2]*other.vector[1], self[2]*other.vector[0]-self[0]*other.vector[2], self[0]*other.vector[1]-self[1]*other.vector[0]])
         else:
             return ("cannot cross, vectors must be three dimensional")
 
-    # cross product of solf with other. requires three dimensional vectors
     def printVec(self):
         if self.orientation == 'col':
             for comp_num, value in enumerate(self):
