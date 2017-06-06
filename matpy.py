@@ -215,14 +215,14 @@ class Set:
             print ("\b}")
         return ('')
 
-    # creates a Matrix where each of the set vectors is a row and then computes rref to check for free parameter columns. if there are none, the set is linearly independent
+    # creates a Matrix where each of the set vectors is a row and then computes rref. if every column is a pivot, the set is linearly independent
     def isIndependent(self):
-        return Matrix([vector for vector in self], 'cols').rref().checkPivots()['rank'] == len(self)
+        return Matrix([vector for vector in self], 'col').rref().checkPivots()['rank'] == len(self)
 
     # removes nontrivial dependence relations from a set by taking a subset of only those vectors which become pivot columns in rref
     def makeIndependent(self):
         if not self.isIndependent():
-            return Set([self[index] for index in (column for column in Matrix([vector for vector in self], 'cols').rref().checkPivots()['columns'])])
+            return Set([self[index] for index in (column for column in Matrix([vector for vector in self], 'col').rref().checkPivots()['columns'])])
         else:
             return self
 

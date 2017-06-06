@@ -15,7 +15,7 @@ C_col = M.Matrix([[4,7,2],[0,7,4],[1,7,8]], 'col')
 
 probs = []
 
-'''begin M.Vector tests'''
+'''begin Vector tests'''
 def vecSlicing():
     if v1[0] != 3:
         probs.append('col vector slicing')
@@ -150,7 +150,32 @@ def vecDel():
     if v1_row_cop[0] != 1:
         probs.append('row vector delitem')
 
-'''begin M.Matrix tests'''
+'''begin Set tests'''
+def setLen():
+    pass
+
+def setIter():
+    pass
+
+def setEq():
+    pass
+
+def setGet():
+    pass
+
+def setSet():
+    pass
+
+def setDel():
+    pass
+
+def setIsIndependent():
+    pass
+
+def setMakeIndpendent():
+    pass
+
+'''begin Matrix tests'''
 def matSlicing():
     if A[0] != M.Vector([1,2,3], 'row'):
         probs.append('row matrix slicing')
