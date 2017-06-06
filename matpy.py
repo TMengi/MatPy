@@ -169,11 +169,16 @@ def leastSquaresSol(A, b):
 
 class Set:
     def __init__(self, set_vectors):
+        if not isinstance(set_vectors, list):
+            raise Exception('Set can only be created from a list')
+
         for vector in set_vectors:
             if len(vector) != len(set_vectors[0]):
                 raise Exception('Set invalid, check vector dimensions')
-            elif not isinstance(vector, Vector):
-                raise Exception('set invalid, Args passed contains a non Vector')
+            if isinstance(vector, list):
+                vector = Vector(vector)
+            if not isinstance(vector, Vector):
+                raise Exception('set invalid, Args passed canont be turned into a Vector')
         else:
             self.set_vectors = set_vectors
             self.dimension = len(set_vectors[0])
@@ -201,6 +206,7 @@ class Set:
     def __delitem__(self, index):
         del self.set_vectors[index]
 
+    # always prints as columns just for readability
     def printSet(self):
         for comp_num, value in enumerate(self[0]):
             print ("{", end='')
@@ -215,14 +221,14 @@ class Set:
             print ("\b}")
         return ('')
 
-    # creates a Matrix where each of the set vectors is a row and then computes rref to check for free parameter columns. if there are none, the set is linearly independent
+    # creates a Matrix where each of the set vectors is a row and then computes rref. if every column is a pivot, the set is linearly independent
     def isIndependent(self):
-        return Matrix([vector for vector in self], 'cols').rref().checkPivots()['rank'] == len(self)
+        return Matrix([vector for vector in self], 'col').rref().checkPivots()['rank'] == len(self)
 
     # removes nontrivial dependence relations from a set by taking a subset of only those vectors which become pivot columns in rref
     def makeIndependent(self):
         if not self.isIndependent():
-            return Set([self[index] for index in (column for column in Matrix([vector for vector in self], 'cols').rref().checkPivots()['columns'])])
+            return Set([self[index] for index in (column for column in Matrix([vector for vector in self], 'col').rref().checkPivots()['columns'])])
         else:
             return self
 
@@ -485,7 +491,6 @@ class Matrix:
 
     # checks the current state of the matrix with isRREF
     def update(self):
-        # print (self)
         return self.isRREF()
 
     # puts a matrix into rref by continuously calling update and fixing the problem returned

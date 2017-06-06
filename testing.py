@@ -6,6 +6,12 @@ v1 = M.Vector([3,6,1])
 v1_row = M.Vector([3,6,1], 'row')
 v2 = M.Vector([2,8,2])
 v2_row = M.Vector([2,8,2], 'row')
+v3 = M.Vector([4,0,1])
+v3_row = M.Vector([4,0,1], 'row')
+
+s1 = M.Set([v1, v2, v3])
+s1_row = M.Set([v1_row, v2_row, v3_row])
+
 A = M.Matrix([[1,2,3],[6,5,2],[9,0,2]])
 A_col = M.Matrix([[1,2,3],[6,5,2],[9,0,2]], 'col')
 B = M.Matrix([[1,2,3],[6,5,2],[9,0,2],[6,2,3]])
@@ -15,7 +21,7 @@ C_col = M.Matrix([[4,7,2],[0,7,4],[1,7,8]], 'col')
 
 probs = []
 
-'''begin M.Vector tests'''
+'''begin Vector tests'''
 def vecSlicing():
     if v1[0] != 3:
         probs.append('col vector slicing')
@@ -150,7 +156,32 @@ def vecDel():
     if v1_row_cop[0] != 1:
         probs.append('row vector delitem')
 
-'''begin M.Matrix tests'''
+'''begin Set tests'''
+def setLength(): # empty
+    pass
+
+def setIterate(): # empty
+    pass
+
+def setEquivalence(): # empty
+    pass
+
+def setGet(): # empty
+    pass
+
+def setSet(): # empty
+    pass
+
+def setDel(): # empty
+    pass
+
+def setIsIndependent(): # empty
+    pass
+
+def setMakeIndpendent(): # empty
+    pass
+
+'''begin Matrix tests'''
 def matSlicing():
     if A[0] != M.Vector([1,2,3], 'row'):
         probs.append('row matrix slicing')
@@ -270,6 +301,56 @@ def matDel():
     if A_col_cop[0] != M.Vector([9,0,2]):
         probs.append('col matrix delitem')
 
+def matIsSquare():
+    pass
+
+def matCheckLead():
+    pass
+
+def matSwapRows(): # empty
+    pass
+
+def matIsRREF(): # empty
+    pass
+
+def matRREF(): # empty
+    pass
+
+def matElimNegs(): # empty
+    pass
+
+def matCheckPivots(): # empty
+    pass
+
+def matCountSolutions(): # empty
+    pass
+
+def matTranspose(): # empty
+    pass
+
+def matIsOrthogonal(): # empty
+    pass
+
+def matIsSymmetric(): # empty
+    pass
+
+def matisInvertible(): # empty
+    pass
+
+def matInverse(): # empty
+    pass
+
+def matExtend(): # empty
+    pass
+
+def matPop(): # empty
+    pass
+
+def matImage(): # empty
+    pass
+
+
+
 tests = [
 vecSlicing(),
 vecLength(),
@@ -286,7 +367,16 @@ vecExtend(),
 vecGet(),
 vecSet(),
 vecDel(),
-# all vector tests have been completed and included here
+# all vector tests have been completed and included
+setLength(),
+setIterate(),
+setEquivalence(),
+setGet(),
+setSet(),
+setDel(),
+setIsIndependent(),
+setMakeIndpendent(),
+# all Set tests have been included
 matSlicing(),
 matDimensions(),
 matLength(),
@@ -298,6 +388,21 @@ matMultiplication(),
 matGet(),
 matSet(),
 matDel(),
+matSwapRows(),
+matIsRREF(),
+matRREF(),
+matElimNegs(),
+matCheckPivots(),
+matCountSolutions(),
+matTranspose(),
+matIsOrthogonal(),
+matIsSymmetric(),
+matisInvertible(),
+matInverse(),
+matExtend(),
+matPop(),
+matImage(),
+# all Matrix tests have been included
 ]
 
 if __name__ == '__main__':
