@@ -65,7 +65,7 @@ class Vector:
     # normal multiplication for scalars (returns a vector). dot product for vectors (returns a number). got lazy for matrices and just reversed the order so it would redirect to Matrix.__mul__
     def __mul__(self, other):
         if isinstance(other, int) or isinstance(other, float):
-            return Vector([value * other for value in self])
+            return Vector([value * other for value in self], self.orientation)
         elif isinstance(other, Vector):
             return self.dot(other)
         elif isinstance(other, Matrix):
