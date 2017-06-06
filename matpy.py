@@ -107,13 +107,13 @@ class Vector:
     def dot(self, other):
         return sum(self_value * other.vector[index] for index, self_value in enumerate(self))
 
+    # cross product of solf with other. requires three dimensional vectors
     def cross(self, other):
         if len(self) == 3 and len(other) == 3:
             return Vector([self[1]*other.vector[2]-self[2]*other.vector[1], self[2]*other.vector[0]-self[0]*other.vector[2], self[0]*other.vector[1]-self[1]*other.vector[0]])
         else:
             return ("cannot cross, vectors must be three dimensional")
 
-    # cross product of solf with other. requires three dimensional vectors
     def printVec(self):
         if self.orientation == 'col':
             for comp_num, value in enumerate(self):
