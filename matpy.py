@@ -412,7 +412,7 @@ class Matrix:
             if self.number_of_cols != len(other):
                 return ('cannot multiply, size error')
             else:
-                return Vector([row * other for row in self])
+                return Vector([row * other for row in self.makeOrientationMatch('row')])
 
         else:
             return None
