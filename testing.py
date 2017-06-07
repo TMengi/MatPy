@@ -265,7 +265,9 @@ def matMultiplication():
     if (A_col*A_col) != M.Matrix([[40,12,13],[54,37,32],[27,18,31]], 'col'):
         probs.append('col matrix multiplication values')
     if (A*C_col) != M.Matrix([[24,26,39],[63,43,57],[40,8,25]]):
-        probs.append('cross orientation matrix multiplication values')
+        probs.append('cross orientation (r*c) matrix multiplication values')
+    if (C_col*A) != M.Matrix([[13,8,14],[112,49,49],[86,24,30]]):
+        probs.append('cross orientation (c*r) matrix multiplication values')
     if (A*v1) != M.Vector([18,50,29]):
         probs.append('row matrix * col vector values')
     if (A*v1_row) != M.Vector([18,50,29]):
