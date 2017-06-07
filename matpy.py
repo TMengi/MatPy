@@ -424,7 +424,7 @@ class Matrix:
         else:
             return None
 
-    # takes a matrix and changes the orientation to rwos without changing the values
+    # takes a matrix and changes the orientation to rows without changing the values
     def makeOrientationRow(self):
         if self.orientation == 'row':
             return self
