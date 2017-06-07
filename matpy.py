@@ -337,7 +337,7 @@ class Matrix:
 
     def __eq__(self, other):
         # reinitialize objects so that they have the same orientation for comparison
-        return self.makeOrientationRow().__dict__ == other.makeOrientationRow().__dict__
+        return self.__dict__ == other.makeOrientationMatch(self.orientation).__dict__
 
     # returns the vector at the specified index, meaning that it selects in orientaiton specified manner: row number for row matrix or col number for col matrix
     def __getitem__(self, index):
@@ -374,12 +374,7 @@ class Matrix:
             return ('cannot add Vector to matrix')
         elif isinstance(other, Matrix):
             if self.dimensions == other.dimensions:
-                # need a specific case for cross orientation
-                if self.orientation != other.orientation:
-                    return Matrix([vec + other.makeOrientationRow()[vec_num] for vec_num, vec in enumerate(self.makeOrientationRow())], self.orientation)
-                # both rows or cross orientation can both be handled by using the Matrix.makeOrientationRow method
-                else:
-                    return Matrix([vec + other[vec_num] for vec_num, vec in enumerate(self)], self.orientation)
+                return Matrix([vec + other.makeOrientationMatch(self.orientation)[vec_num] for vec_num, vec in enumerate(self)], self.orientation).makeOrientationMatch(self.orientation)
             else:
                 return ('cannot add, matrices not same size')
         else:
@@ -391,12 +386,7 @@ class Matrix:
             return ('cannot add number to matrix')
         elif isinstance(other, Matrix):
             if self.dimensions == other.dimensions:
-                # need a specific case for cross orientation
-                if self.orientation != other.orientation:
-                    return Matrix([vec - other.makeOrientationRow()[vec_num] for vec_num, vec in enumerate(self.makeOrientationRow())], self.orientation)
-                # both rows or cross orientation can both be handled by using the Matrix.makeOrientationRow method
-                else:
-                    return Matrix([vec - other[vec_num] for vec_num, vec in enumerate(self)], self.orientation)
+                return Matrix([vec - other.makeOrientationMatch(self.orientation)[vec_num] for vec_num, vec in enumerate(self)], self.orientation).makeOrientationMatch(self.orientation)
             else:
                 return ('cannot subtract, matrices not same size')
         else:
@@ -412,17 +402,10 @@ class Matrix:
             if self.number_of_cols != other.number_of_rows:
                 return ('cannot multiply, size error')
             else:
-                if self.orientation == 'row' and other.orientation == 'col':
-                    return Matrix([(Vector([self_row * Vector([other_row[col_num] for other_row in other.makeOrientationRow()]) for self_row in self])) for col_num, value in enumerate(other.makeOrientationRow()[0])], 'col').makeOrientationRow()
-
-                if self.orientation == 'col' and other.orientation == 'row':
-                    return Matrix([(Vector([self_row * Vector([other_row[col_num] for other_row in other]) for self_row in self.makeOrientationRow()])) for col_num, value in enumerate(other[0])], 'col')
-
-                elif self.orientation == 'col' and other.orientation == 'col':
-                    return Matrix([(Vector([self_row * Vector([other_row[col_num] for other_row in other.makeOrientationRow()]) for self_row in self.makeOrientationRow()])) for col_num, value in enumerate(other.makeOrientationRow()[0])], 'col')
-
-                elif self.orientation == 'row' and other.orientation == 'row':
-                    return Matrix([(Vector([self_row * Vector([other_row[col_num] for other_row in other]) for self_row in self])) for col_num, value in enumerate(other[0])], 'col').makeOrientationRow()
+                if self.orientation == 'col' and other.orientation == 'col':
+                    return Matrix([(Vector([self_row * Vector([other_row[col_num] for other_row in other.makeOrientationMatch(self.orientation)]) for self_row in self])) for col_num, value in enumerate(other.makeOrientationMatch(self.orientation)[0])], 'col').transpose().makeOrientationMatch(self.orientation)
+                else:
+                    return Matrix([(Vector([self_row * Vector([other_row[col_num] for other_row in other.makeOrientationMatch(self.orientation)]) for self_row in self])) for col_num, value in enumerate(other.makeOrientationMatch(self.orientation)[0])], 'col').makeOrientationMatch(self.orientation)
 
         # always outputs a col vector
         elif isinstance(other, Vector):
@@ -434,12 +417,12 @@ class Matrix:
         else:
             return None
 
-    # takes a matrix and changes the orientation to rows without changing the values
-    def makeOrientationRow(self):
-        if self.orientation == 'row':
+    # takes a matrix and changes the orientation to the one specified without changing the values
+    def makeOrientationMatch(self, desired):
+        if self.orientation == desired:
             return self
-        if self.orientation == 'col':
-            return Matrix([Vector([col[row_num] for col in self]) for row_num, value in enumerate(self[0])])
+        else:
+            return Matrix([Vector([col[row_num] for col in self]) for row_num, value in enumerate(self[0])], desired)
 
     # checks if a matrix is square by checking if its dimensions are equivalent
     def isSquare(self):
