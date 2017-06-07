@@ -248,9 +248,9 @@ def matMultiplication():
     if (A_col * 5).orientation != A_col.orientation:
         probs.append('col matrix scalar multiplication orientation not preserved')
     if (A * A).orientation != 'row':
-        probs.append('row matrix multiplication orientation not row')
+        probs.append('row matrix multiplication orientation not preserved')
     if (A_col * A_col).orientation != 'col':
-        probs.append('col matrix multiplication orientation not col')
+        probs.append('col matrix multiplication orientation not preserved')
     if (A * A_col).orientation != 'row':
         probs.append('cross orientation (r*c) matrix multiplication orientation not preserved')
     if (A_col * A).orientation != 'col':

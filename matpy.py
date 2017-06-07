@@ -411,14 +411,24 @@ class Matrix:
         elif isinstance(other, Matrix):
             if self.number_of_cols != other.number_of_rows:
                 return ('cannot multiply, size error')
-            elif self.number_of_cols == other.number_of_rows:
-                return Matrix([[row * other_row for other_row in other.transpose()] for row_num, row in enumerate(self)], self.orientation)
+            else:
+                if self.orientation == 'row' and other.orientation == 'col':
+                    return Matrix([(Vector([self_row * Vector([other_row[col_num] for other_row in other.makeOrientationRow()]) for self_row in self])) for col_num, value in enumerate(other.makeOrientationRow()[0])], 'col').makeOrientationRow()
+
+                if self.orientation == 'col' and other.orientation == 'row':
+                    return Matrix([(Vector([self_row * Vector([other_row[col_num] for other_row in other]) for self_row in self.makeOrientationRow()])) for col_num, value in enumerate(other[0])], 'col')
+
+                elif self.orientation == 'col' and other.orientation == 'col':
+                    return Matrix([(Vector([self_row * Vector([other_row[col_num] for other_row in other.makeOrientationRow()]) for self_row in self.makeOrientationRow()])) for col_num, value in enumerate(other.makeOrientationRow()[0])], 'col')
+
+                elif self.orientation == 'row' and other.orientation == 'row':
+                    return Matrix([(Vector([self_row * Vector([other_row[col_num] for other_row in other]) for self_row in self])) for col_num, value in enumerate(other[0])], 'col').makeOrientationRow()
 
         # always outputs a col vector
         elif isinstance(other, Vector):
             if self.number_of_cols != len(other):
                 return ('cannot multiply, size error')
-            elif self.number_of_cols == len(other):
+            else:
                 return Vector([row * other for row in self])
 
         else:
@@ -655,3 +665,6 @@ class Matrix:
     # computes rref and checks which columns are pivots, then takes those columns out of the original matrix and makes a set out of them
     def image(self):
         return Set([self.transpose()[column] for column in self.checkPivots()['columns']])
+
+A = Matrix([[1,2,3],[6,5,2],[9,0,2]])
+A_col = Matrix([[1,2,3],[6,5,2],[9,0,2]], 'col')
