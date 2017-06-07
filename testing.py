@@ -255,6 +255,14 @@ def matMultiplication():
         probs.append('cross orientation (r*c) matrix multiplication orientation not preserved')
     if (A_col * A).orientation != 'col':
         probs.append('cross orientation (c*r) matrix multiplication orientation not preserved')
+    if (A * v1).orientation != 'col':
+        probs.append('matrix vector (r*c) orientation incorrect')
+    if (A * v1_row).orientation != 'row':
+        probs.append('matrix vector (r*r) orientation incorrect')
+    if (A_col * v1).orientation != 'col':
+        probs.append('matrix vector (c*c) orientation incorrect')
+    if (A_col * v1_row).orientation != 'row':
+        probs.append('matrix vector (c*r) orientation incorrect')
     # value tests
     if (A*5) != M.Matrix([[5,10,15],[30,25,10],[45,0,10]]):
         probs.append('row matrix scalar multiplication values')
@@ -266,7 +274,7 @@ def matMultiplication():
         probs.append('col matrix multiplication values')
     if (A*C_col) != M.Matrix([[24,26,39],[63,43,57],[40,8,25]]):
         probs.append('cross orientation (r*c) matrix multiplication values')
-    if (C_col*A) != M.Matrix([[13,8,14],[112,49,49],[86,24,30]]):
+    if (C_col*A) != M.Matrix([[13,8,14],[112,49,49],[98,24,30]]):
         probs.append('cross orientation (c*r) matrix multiplication values')
     if (A*v1) != M.Vector([18,50,29]):
         probs.append('row matrix * col vector values')

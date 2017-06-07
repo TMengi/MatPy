@@ -402,17 +402,14 @@ class Matrix:
             if self.number_of_cols != other.number_of_rows:
                 return ('cannot multiply, size error')
             else:
-                if self.orientation == 'col' and other.orientation == 'col':
-                    return Matrix([(Vector([self_row * Vector([other_row[col_num] for other_row in other.makeOrientationMatch(self.orientation)]) for self_row in self])) for col_num, value in enumerate(other.makeOrientationMatch(self.orientation)[0])], 'col').transpose().makeOrientationMatch(self.orientation)
-                else:
-                    return Matrix([(Vector([self_row * Vector([other_row[col_num] for other_row in other.makeOrientationMatch(self.orientation)]) for self_row in self])) for col_num, value in enumerate(other.makeOrientationMatch(self.orientation)[0])], 'col').makeOrientationMatch(self.orientation)
+                return Matrix([self * Vector([other_row[col_num] for other_row in other.makeOrientationMatch('row')]) for col_num, value in enumerate(other.makeOrientationMatch('row'))], 'col').makeOrientationMatch(self.orientation)
 
         # always outputs a col vector
         elif isinstance(other, Vector):
             if self.number_of_cols != len(other):
                 return ('cannot multiply, size error')
             else:
-                return Vector([row * other for row in self.makeOrientationMatch('row')])
+                return Vector([row * other for row in self.makeOrientationMatch('row')], other.orientation)
 
         else:
             return None
@@ -648,6 +645,3 @@ class Matrix:
     # computes rref and checks which columns are pivots, then takes those columns out of the original matrix and makes a set out of them
     def image(self):
         return Set([self.transpose()[column] for column in self.checkPivots()['columns']])
-
-A = Matrix([[1,2,3],[6,5,2],[9,0,2]])
-A_col = Matrix([[1,2,3],[6,5,2],[9,0,2]], 'col')
