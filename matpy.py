@@ -287,21 +287,20 @@ class Matrix:
         if not orientation == 'row' and not orientation == 'col':
             raise Exception('orientation must be either "row" or "col"')
 
-        # if a column matrix, transpose the values so they can be parsed like normal
-        if orientation == 'col':
-            matrix = [[row[col_num] for row in matrix] for col_num, value in enumerate(matrix[0])]
-
         if isinstance(matrix, Matrix):
             matrix = matrix.matrix
 
-        # if an incoming row is not a vector, turn it into one if possible
-        for row_num, row in enumerate(matrix):
-            if isinstance(row, list):
-                matrix[row_num] = Vector(row)
-            if isinstance(row, int) or isinstance(row, float):
-                matrix[row_num] = Vector([row])
-            if not isinstance(matrix[row_num], Vector):
+        # if an incoming piece of data is not a vector, turn it into one if possible
+        for data_num, data in enumerate(matrix):
+            if isinstance(data, list):
+                matrix[data_num] = Vector(data)
+            if isinstance(data, int) or isinstance(data, float):
+                matrix[data_num] = Vector([data])
+            if not isinstance(matrix[data_num], Vector):
                 raise Exception("Matrix invalid, args passed can't be turned into vector")
+
+        for vector in matrix:
+            vector.orientation = orientation
 
         # checks that the incoming vectors are all the same length
         for vector in matrix:
@@ -310,20 +309,24 @@ class Matrix:
 
         self.matrix = matrix
         self.orientation = orientation
-        self.number_of_rows = len(self.matrix)
-        self.number_of_cols = len(self.matrix[0])
+        if self.orientation == 'row':
+            self.number_of_rows = len(self.matrix)
+            self.number_of_cols = len(self.matrix[0])
+        elif self.orientation == 'col':
+            self.number_of_rows = len(self.matrix[0])
+            self.number_of_cols = len(self.matrix)
         self.dimensions = (self.number_of_rows, self.number_of_cols)
 
-    # number of rows, not the number of vectors. strategic decision for places where we had to take len() of objects which may not be matrices and may not have a self.number_of_rows value
+    # returns the number of vectors in a matrix
     def __len__(self):
-        return self.number_of_rows
+        if self.orientation == 'row':
+            return self.number_of_rows
+        else:
+            return self.number_of_cols
 
     # returns consecutive vectors in the matrix
     def __iter__(self):
-        if self.orientation == 'col':
-            return (x for x in [Vector([row[col_num] for row in self.matrix]) for col_num, col in enumerate(self.matrix)])
-        else:
-            return (x for x in self.matrix)
+        return (x for x in self.matrix)
 
     def __repr__(self):
         return ("{}x{} Matrix object with {}s {}".format(self.number_of_rows, self.number_of_cols, self.orientation, self.matrix))
@@ -334,78 +337,89 @@ class Matrix:
 
     def __eq__(self, other):
         # reinitialize objects so that they have the same orientation for comparison
-        return Matrix(self).__dict__ == Matrix(other).__dict__
+        return self.__dict__ == other.makeOrientationMatch(self.orientation).__dict__
 
-    # adds matrices by adding corresponding rows as vectors. returns another row matrix unless the two added matrices are both cols
+    # returns the vector at the specified index, meaning that it selects in orientaiton specified manner: row number for row matrix or col number for col matrix
+    def __getitem__(self, index):
+        return self.matrix[index]
+
+    # checks for correct length then sets the value at the specified index
+    def __setitem__(self, index, value):
+        if not len(value) == len(self[0]):
+            return ('invalid, check value dimension')
+        if isinstance(value, Vector):
+            value.orientation = self.orientation
+            self.matrix[index] = value
+        elif isinstance(value, list):
+            self.matrix[index] = Vector(value, self.orientation)
+        else:
+            return ('invalid, value passed is not a list or Vector')
+
+    # deletes the vector at the specified index and reassigns dimension values
+    def __delitem__(self, index):
+        del self.matrix[index]
+        if self.orientation == 'row':
+            self.number_of_rows = len(self.matrix)
+            self.number_of_cols = len(self.matrix[0])
+        elif self.orientation == 'col':
+            self.number_of_rows = len(self.matrix[0])
+            self.number_of_cols = len(self.matrix)
+        self.dimensions = (self.number_of_rows, self.number_of_cols)
+
+    # adds matrices by adding corresponding rows as vectors. returns a matrix with same orientation as self
     def __add__(self, other):
         if isinstance(other, int) or isinstance(other, float):
             return ('cannot add number to matrix')
+        if isinstance(other, Vector):
+            return ('cannot add Vector to matrix')
         elif isinstance(other, Matrix):
             if self.dimensions == other.dimensions:
-                if self.orientation == 'col' and other.orientation == 'col':
-                    return Matrix([row + other[row_num] for row_num, row in enumerate(self)], 'col')
-                else:
-                    return Matrix([row + Matrix(other, 'row')[row_num] for row_num, row in enumerate(Matrix(self, 'row'))])
+                return Matrix([vec + other.makeOrientationMatch(self.orientation)[vec_num] for vec_num, vec in enumerate(self)], self.orientation).makeOrientationMatch(self.orientation)
             else:
                 return ('cannot add, matrices not same size')
         else:
             return ('cannot add, unexpected type')
 
-    # subtracts matrices by subtracting corresponding rows as vectors. returns another row matrix unless the two subtracted matrices are both cols
+    # subtracts matrices by subtracting corresponding rows as vectors. returns a matrix with same orientation as self
     def __sub__(self, other):
         if isinstance(other, int) or isinstance(other, float):
             return ('cannot add number to matrix')
         elif isinstance(other, Matrix):
             if self.dimensions == other.dimensions:
-                if self.orientation == 'col' and other.orientation == 'col':
-                    return Matrix([row - other[row_num] for row_num, row in enumerate(self)], 'col')
-                else:
-                    return Matrix([row - Matrix(other, 'row')[row_num] for row_num, row in enumerate(Matrix(self, 'row'))])
+                return Matrix([vec - other.makeOrientationMatch(self.orientation)[vec_num] for vec_num, vec in enumerate(self)], self.orientation).makeOrientationMatch(self.orientation)
             else:
                 return ('cannot subtract, matrices not same size')
         else:
             return None
 
-    # normal multiplication for scalars (returns a matrix, preserves orientation). distributive dot products of transpose for matrices and vectors
+    # normal multiplication for scalars (returns a matrix, preserves orientation), distributive dot product of transpose algorithm for matrices and vectors
     def __mul__(self, other):
         if isinstance(other, int) or isinstance(other, float):
-            return Matrix([row * other for row in self])
+            return Matrix([row * other for row in self], self.orientation)
 
+        # preserves orientation of self
         elif isinstance(other, Matrix):
             if self.number_of_cols != other.number_of_rows:
                 return ('cannot multiply, size error')
-            elif self.number_of_cols == other.number_of_rows:
-                return Matrix([[row * other_row for other_row in other.transpose()] for row_num, row in enumerate(self)])
+            else:
+                return Matrix([self * Vector([other_row[col_num] for other_row in other.makeOrientationMatch('row')]) for col_num, value in enumerate(other.makeOrientationMatch('row'))], 'col').makeOrientationMatch(self.orientation)
 
+        # always outputs a col vector
         elif isinstance(other, Vector):
             if self.number_of_cols != len(other):
                 return ('cannot multiply, size error')
-            elif self.number_of_cols == len(other):
-                return Vector([row * other for row in self])
+            else:
+                return Vector([row * other for row in self.makeOrientationMatch('row')], other.orientation)
 
         else:
             return None
 
-    def __getitem__(self, index):
-        if self.orientation == 'col':
-            return Vector([row[index] for row in self.matrix])
+    # takes a matrix and changes the orientation to the one specified without changing the values
+    def makeOrientationMatch(self, desired):
+        if self.orientation == desired:
+            return self
         else:
-            row = self.matrix[index]
-            row.orientation = 'row'
-            return row
-
-    def __setitem__(self, index, value):
-        if isinstance(value, Vector):
-            self.matrix[index] = value
-        elif isinstance(value, list):
-            self.matrix[index] = Vector(value)
-        else:
-            return None
-
-    def __delitem__(self, index):
-        del self.matrix[index]
-        self.number_of_rows -= 1
-        self.dimensions = (self.number_of_rows, self.number_of_cols)
+            return Matrix([Vector([col[row_num] for col in self]) for row_num, value in enumerate(self[0])], desired)
 
     # checks if a matrix is square by checking if its dimensions are equivalent
     def isSquare(self):
