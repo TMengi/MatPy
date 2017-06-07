@@ -402,17 +402,19 @@ class Matrix:
         else:
             return None
 
-    # normal multiplication for scalars (returns a matrix, preserves orientation). distributive dot products of transpose for matrices and vectors
+    # normal multiplication for scalars (returns a matrix, preserves orientation), distributive dot product of transpose algorithm for matrices and vectors
     def __mul__(self, other):
         if isinstance(other, int) or isinstance(other, float):
-            return Matrix([row * other for row in self])
+            return Matrix([row * other for row in self], self.orientation)
 
+        # preserves orientation of self
         elif isinstance(other, Matrix):
             if self.number_of_cols != other.number_of_rows:
                 return ('cannot multiply, size error')
             elif self.number_of_cols == other.number_of_rows:
-                return Matrix([[row * other_row for other_row in other.transpose()] for row_num, row in enumerate(self)])
+                return Matrix([[row * other_row for other_row in other.transpose()] for row_num, row in enumerate(self)], self.orientation)
 
+        # always outputs a col vector
         elif isinstance(other, Vector):
             if self.number_of_cols != len(other):
                 return ('cannot multiply, size error')

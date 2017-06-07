@@ -242,6 +242,7 @@ def matSubtraction():
         probs.append('cross orientation matrix subtraction values')
 
 def matMultiplication():
+    # orientation tests
     if (A * 5).orientation != A.orientation:
         probs.append('row matrix scalar multiplication orientation not preserved')
     if (A_col * 5).orientation != A_col.orientation:
@@ -250,8 +251,11 @@ def matMultiplication():
         probs.append('row matrix multiplication orientation not row')
     if (A_col * A_col).orientation != 'col':
         probs.append('col matrix multiplication orientation not col')
-    if (A * A_col). orientation != 'row':
-        probs.append('cross orientation matrix multiplication orientation not row')
+    if (A * A_col).orientation != 'row':
+        probs.append('cross orientation (r*c) matrix multiplication orientation not preserved')
+    if (A_col * A).orientation != 'col':
+        probs.append('cross orientation (c*r) matrix multiplication orientation not preserved')
+    # value tests
     if (A*5) != M.Matrix([[5,10,15],[30,25,10],[45,0,10]]):
         probs.append('row matrix scalar multiplication values')
     if (A_col*5) != M.Matrix([[5,30,45],[10,25,0],[15,10,10]]):
