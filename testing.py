@@ -166,7 +166,7 @@ def setLength(): # empty
         probs.append('len of row set')
     if len(s1_m) != 3:
         probs.append('len of mixed set')
-        
+
 def setIterate(): # empty
     pass
 
