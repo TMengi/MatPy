@@ -14,6 +14,7 @@ s1_row = M.Set([v1_row, v2_row, v3_row])
 
 A = M.Matrix([[1,2,3],[6,5,2],[9,0,2]])
 A_col = M.Matrix([[1,2,3],[6,5,2],[9,0,2]], 'col')
+A_alt = M.Matrix([[1,6,9],[2,5,0],[3,2,2]], 'col')
 B = M.Matrix([[1,2,3],[6,5,2],[9,0,2],[6,2,3]])
 B_col = M.Matrix([[1,2,3],[6,5,2],[9,0,2],[6,2,3]], 'col')
 C = M.Matrix([[4,7,2],[0,7,4],[1,7,8]])
@@ -197,7 +198,7 @@ def matDimensions():
 def matLength():
     if len(B) != 4:
         probs.append('row matrix length')
-    if len(B_col) != 3:
+    if len(B_col) != 4:
         probs.append('col matrix length')
 
 def matIterate():
@@ -209,8 +210,8 @@ def matIterate():
             probs.append('col matrix iteration')
 
 def matEquivalence():
-    if A.transpose() != A_col:
-        probs.append('not equating row version with col version')
+    if A != A_alt:
+        probs.append("cross orientation matrix equivalence")
 
 def matAddition():
     if A+B != 'cannot add, matrices not same size':
@@ -220,7 +221,9 @@ def matAddition():
     if (A_col+A_col).orientation != 'col':
         probs.append('col matrix addition orientation not preserved')
     if (A+A_col).orientation != 'row':
-        probs.append('cross orientation matrix addition orientation not row')
+        probs.append('cross orientation (r+c) matrix addition orientation not preserved')
+    if (A_col+A).orientation != 'col':
+        probs.append('cross orientation (c+r) matrix addition orientation not preserved')
     if A+A != M.Matrix([[2,4,6],[12,10,4],[18,0,4]]):
         probs.append('row matrix addition values')
     if A_col+A_col != M.Matrix([[2,4,6],[12,10,4],[18,0,4]], 'col'):
@@ -239,16 +242,28 @@ def matSubtraction():
         probs.append('cross orientation matrix subtraction values')
 
 def matMultiplication():
+    # orientation tests
     if (A * 5).orientation != A.orientation:
         probs.append('row matrix scalar multiplication orientation not preserved')
     if (A_col * 5).orientation != A_col.orientation:
         probs.append('col matrix scalar multiplication orientation not preserved')
     if (A * A).orientation != 'row':
-        probs.append('row matrix multiplication orientation not row')
+        probs.append('row matrix multiplication orientation not preserved')
     if (A_col * A_col).orientation != 'col':
-        probs.append('col matrix multiplication orientation not col')
-    if (A * A_col). orientation != 'row':
-        probs.append('cross orientation matrix multiplication orientation not row')
+        probs.append('col matrix multiplication orientation not preserved')
+    if (A * A_col).orientation != 'row':
+        probs.append('cross orientation (r*c) matrix multiplication orientation not preserved')
+    if (A_col * A).orientation != 'col':
+        probs.append('cross orientation (c*r) matrix multiplication orientation not preserved')
+    if (A * v1).orientation != 'col':
+        probs.append('matrix vector (r*c) orientation incorrect')
+    if (A * v1_row).orientation != 'row':
+        probs.append('matrix vector (r*r) orientation incorrect')
+    if (A_col * v1).orientation != 'col':
+        probs.append('matrix vector (c*c) orientation incorrect')
+    if (A_col * v1_row).orientation != 'row':
+        probs.append('matrix vector (c*r) orientation incorrect')
+    # value tests
     if (A*5) != M.Matrix([[5,10,15],[30,25,10],[45,0,10]]):
         probs.append('row matrix scalar multiplication values')
     if (A_col*5) != M.Matrix([[5,30,45],[10,25,0],[15,10,10]]):
@@ -258,7 +273,9 @@ def matMultiplication():
     if (A_col*A_col) != M.Matrix([[40,12,13],[54,37,32],[27,18,31]], 'col'):
         probs.append('col matrix multiplication values')
     if (A*C_col) != M.Matrix([[24,26,39],[63,43,57],[40,8,25]]):
-        probs.append('cross orientation matrix multiplication values')
+        probs.append('cross orientation (r*c) matrix multiplication values')
+    if (C_col*A) != M.Matrix([[13,8,14],[112,49,49],[98,24,30]]):
+        probs.append('cross orientation (c*r) matrix multiplication values')
     if (A*v1) != M.Vector([18,50,29]):
         probs.append('row matrix * col vector values')
     if (A*v1_row) != M.Vector([18,50,29]):
