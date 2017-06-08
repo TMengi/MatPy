@@ -178,8 +178,13 @@ def setIterate():
         if vec != s1_m[index]:
             probs.append("mixed set iteration")
 
-def setEquivalence(): # empty
-    pass
+def setEquivalence():
+    if s1 != s1_row:
+        probs.append("c/r set equivalence")
+    if s1 != s1_m:
+        probs.append("c/m set equivalence")
+    if s1_row != s1_m:
+        probs.append("r/m set equivalence")
 
 def setGet(): # empty
     pass
