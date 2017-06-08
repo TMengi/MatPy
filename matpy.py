@@ -295,7 +295,13 @@ class Matrix:
         if not orientation == 'row' and not orientation == 'col':
             raise Exception('orientation must be either "row" or "col"')
 
+        #  if the incoming matrix is a Set, just take the Vectors from that set as the data
+        if isinstance(matrix, Set):
+            matrix = [vec for vec in Set]
+
+        # if the incoming matrix is already a Matrix, just take the data and orientation
         if isinstance(matrix, Matrix):
+            orientation = matrix.orientation
             matrix = matrix.matrix
 
         # if an incoming piece of data is not a vector, turn it into one if possible
