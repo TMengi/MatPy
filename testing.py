@@ -11,6 +11,7 @@ v3_row = M.Vector([4,0,1], 'row')
 
 s1 = M.Set([v1, v2, v3])
 s1_row = M.Set([v1_row, v2_row, v3_row])
+s1_m = M.Set([v1, v2_row, v3])
 
 A = M.Matrix([[1,2,3],[6,5,2],[9,0,2]])
 A_col = M.Matrix([[1,2,3],[6,5,2],[9,0,2]], 'col')
@@ -159,7 +160,12 @@ def vecDel():
 
 '''begin Set tests'''
 def setLength(): # empty
-    pass
+    if len(s1) != 3:
+        probs.append('len of col set')
+    if len(s1_row) != 3:
+        probs.append('len of row set')
+    if len(s1_m) != 3:
+        probs.append('len of mixed set')
 
 def setIterate(): # empty
     pass

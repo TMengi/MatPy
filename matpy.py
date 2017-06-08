@@ -504,11 +504,7 @@ class Matrix:
 
     # puts a matrix into rref by continuously calling update and fixing the problem returned
     def rref(self):
-        if self.orientation == 'col':
-            self.orientation = 'row'
-            was_cols = True
-
-        RREF = copy.deepcopy(self)
+        RREF = self.makeOrientationMatch('row')
 
         # scan for initial problem
         status = RREF.update()
@@ -533,12 +529,8 @@ class Matrix:
 
         if status['solved'] == True:
             RREF = RREF.elimNegs()
-            try:
-                if was_cols == True:
-                    RREF.orientation = 'col'
-            except:
-                pass
-            return RREF
+
+            return RREF.makeOrientationMatch(self.orientation)
 
     # replaces -0.0 with just plain 0.0. necessary for comparing two matrices
     def elimNegs(self):
