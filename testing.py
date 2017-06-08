@@ -159,7 +159,7 @@ def vecDel():
         probs.append('row vector delitem')
 
 '''begin Set tests'''
-def setLength(): # empty
+def setLength():
     if len(s1) != 3:
         probs.append('len of col set')
     if len(s1_row) != 3:
@@ -167,8 +167,16 @@ def setLength(): # empty
     if len(s1_m) != 3:
         probs.append('len of mixed set')
 
-def setIterate(): # empty
-    pass
+def setIterate():
+    for index, vec in enumerate(s1):
+        if vec != s1[index]:
+            probs.append("col set iteration")
+    for index, vec in enumerate(s1_row):
+        if vec != s1_row[index]:
+            probs.append("row set iteration")
+    for index, vec in enumerate(s1_m):
+        if vec != s1_m[index]:
+            probs.append("mixed set iteration")
 
 def setEquivalence(): # empty
     pass
