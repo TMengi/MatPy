@@ -101,7 +101,7 @@ class Vector:
         if isinstance(value, int) or isinstance(value, float):
             self.vector[index] = value
         else:
-            return None
+            return ('cannot set value, not a number')
 
     # dot product of self with other
     def dot(self, other):
@@ -202,6 +202,14 @@ class Set:
 
     def __getitem__(self, index):
         return self.set_vectors[index]
+
+    def __setitem__(self, index, value):
+        if isinstance(value, list):
+            value = Vector(value)
+        if isinstance(value, Vector):
+            self.set_vectors[index] = value
+        else:
+            return ('cannot set value, not a vector')
 
     def __delitem__(self, index):
         del self.set_vectors[index]
