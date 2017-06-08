@@ -133,8 +133,10 @@ def vecGet():
 def vecSet():
     v1_cop = copy.deepcopy(v1)
     v1_row_cop = copy.deepcopy(v1_row)
+
     v1_cop[2] = 5
     v1_row_cop[2] = 5
+
     if v1_cop[2] != 5:
         probs.append('col vector setitem')
     if v1_row_cop[2] != 5:
@@ -194,13 +196,15 @@ def setGet():
     if s1_m[0] != M.Vector([3,6,1]) or s1_m[1] != M.Vector([2,8,2], 'row') or s1_m[2] != M.Vector([4,0,1]):
         probs.append("mixed set getitem")
 
-def setSet(): # empty
+def setSet():
     s1_cop = copy.deepcopy(s1)
     s1_row_cop = copy.deepcopy(s1_row)
     s1_m_cop = copy.deepcopy(s1_m)
+
     s1_cop[0] = M.Vector([0,0,4])
     s1_row_cop[0] = M.Vector([0,0,4], 'row')
     s1_m_cop[0] = M.Vector([0,0,4])
+
     if s1_cop[0] != M.Vector([0,0,4]):
         probs.append('col set setitem')
     if s1_row_cop[0] != M.Vector([0,0,4], 'row'):
@@ -208,8 +212,21 @@ def setSet(): # empty
     if s1_m_cop[0] != M.Vector([0,0,4]):
         probs.append('mixed set setitem')
 
-def setDel(): # empty
-    pass
+def setDel():
+    s1_cop = copy.deepcopy(s1)
+    s1_row_cop = copy.deepcopy(s1_row)
+    s1_m_cop = copy.deepcopy(s1_m)
+
+    del s1_cop[0]
+    del s1_row_cop[0]
+    del s1_m_cop[0]
+
+    if s1_cop[0] != M.Vector([2,8,2]):
+        probs.append("col set delitem")
+    if s1_row_cop[0] != M.Vector([2,8,2], 'row'):
+        probs.append("row set delitem")
+    if s1_m_cop[0] != M.Vector([2,8,2], 'row'):
+        probs.append("mixed set delitem") 
 
 def setIsIndependent(): # empty
     pass
