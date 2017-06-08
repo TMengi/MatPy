@@ -186,8 +186,13 @@ def setEquivalence():
     if s1_row != s1_m:
         probs.append("r/m set equivalence")
 
-def setGet(): # empty
-    pass
+def setGet():
+    if s1[0] != M.Vector([3,6,1]) or s1[1] != M.Vector([2,8,2]) or s1[2] != M.Vector([4,0,1]):
+        probs.append("col set getitem")
+    if s1_row[0] != M.Vector([3,6,1], 'row') or s1_row[1] != M.Vector([2,8,2], 'row') or s1_row[2] != M.Vector([4,0,1], 'row'):
+        probs.append("row set getitem")
+    if s1_m[0] != M.Vector([3,6,1]) or s1_m[1] != M.Vector([2,8,2], 'row') or s1_m[2] != M.Vector([4,0,1]):
+        probs.append("mixed set getitem")
 
 def setSet(): # empty
     pass
