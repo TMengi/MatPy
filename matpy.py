@@ -637,3 +637,57 @@ class Matrix:
     # computes rref and checks which columns are pivots, then takes those columns out of the original matrix and makes a set out of them
     def image(self):
         return Set([self.transpose()[column] for column in self.checkPivots()['columns']])
+
+    def determinant(self):
+        # check that determinant is defined
+        if not self.isSquare():
+            return ("determinant is not defined for nonsquare matrices")
+
+        # if 2x2, just use ad-bc formula
+        elif self.dimensions == (2,2):
+            # print (self[0][0])
+            # print (self[1][1])
+            # print (self[0][0]*self[1][1])
+            # print (self[1][0])
+            # print (self[0][1])
+            # print (self[1][0]*self[0][1])
+            # print (self[0][0]*self[1][1] - self[1][0]*self[0][1])
+
+            return (self[0][0]*self[1][1] - self[1][0]*self[0][1])
+
+        # if bigger than 2, use laplace algorithm to expand. will recursively call if necessary
+        elif len(self) > 2:
+            # make a copy of the matrix so we can delete rows as necessary
+            self_cop = copy.deepcopy(self)
+
+            # force row orientation for predictability. shouldn't actually be necessary due to multilinearity of determinant in both rows and cols of matrix but we'll see
+            self_cop = self_cop.makeOrientationMatch('row')
+
+            # delete top row
+            del self_cop[0]
+
+            # force column orientation for ease of selectivity
+            self_cop = self_cop.makeOrientationMatch('col')
+
+            # iterate over cols of new matrix, creating smaller matrices and computing determinants of those and multiplying them by the correct coefficient from the deleted top row, then summing these numbers
+
+            '''algorithm spelled out in for loops and stored in variables for debugging purposes'''
+            # nums = []
+            # for col_num, col in enumerate(self_cop):
+            #     new_mat = Matrix([new_col for new_col_num, new_col in enumerate(self_cop) if new_col_num != col_num], 'col')
+            #     print (new_mat)
+            #     smal_det = (-1)**col_num * self.makeOrientationMatch('row')[0][col_num] * new_mat.determinant()
+            #     print (smal_det)
+            #     nums.append(smal_det)
+            # return sum(nums)
+
+            return sum([(-1)**col_num * self.makeOrientationMatch('row')[0][col_num] * Matrix([new_col for new_col_num, new_col in enumerate(self_cop) if new_col_num != col_num], 'col').determinant() for col_num, col in enumerate(self_cop)])
+
+A = Matrix([[1,2,3],[6,5,2],[9,0,2]])
+A_col = Matrix([[1,2,3],[6,5,2],[9,0,2]], 'col')
+A_alt = Matrix([[1,6,9],[2,5,0],[3,2,2]], 'col')
+
+print (A)
+print (A.determinant())
+print (A_alt.determinant())
+print (A_col.determinant())
