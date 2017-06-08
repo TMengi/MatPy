@@ -645,14 +645,6 @@ class Matrix:
 
         # if 2x2, just use ad-bc formula
         elif self.dimensions == (2,2):
-            # print (self[0][0])
-            # print (self[1][1])
-            # print (self[0][0]*self[1][1])
-            # print (self[1][0])
-            # print (self[0][1])
-            # print (self[1][0]*self[0][1])
-            # print (self[0][0]*self[1][1] - self[1][0]*self[0][1])
-
             return (self[0][0]*self[1][1] - self[1][0]*self[0][1])
 
         # if bigger than 2, use laplace algorithm to expand. will recursively call if necessary
@@ -682,12 +674,3 @@ class Matrix:
             # return sum(nums)
 
             return sum([(-1)**col_num * self.makeOrientationMatch('row')[0][col_num] * Matrix([new_col for new_col_num, new_col in enumerate(self_cop) if new_col_num != col_num], 'col').determinant() for col_num, col in enumerate(self_cop)])
-
-A = Matrix([[1,2,3],[6,5,2],[9,0,2]])
-A_col = Matrix([[1,2,3],[6,5,2],[9,0,2]], 'col')
-A_alt = Matrix([[1,6,9],[2,5,0],[3,2,2]], 'col')
-
-print (A)
-print (A.determinant())
-print (A_alt.determinant())
-print (A_col.determinant())
