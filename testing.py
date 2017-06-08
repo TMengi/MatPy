@@ -195,7 +195,18 @@ def setGet():
         probs.append("mixed set getitem")
 
 def setSet(): # empty
-    pass
+    s1_cop = copy.deepcopy(s1)
+    s1_row_cop = copy.deepcopy(s1_row)
+    s1_m_cop = copy.deepcopy(s1_m)
+    s1_cop[0] = M.Vector([0,0,4])
+    s1_row_cop[0] = M.Vector([0,0,4], 'row')
+    s1_m_cop[0] = M.Vector([0,0,4])
+    if s1_cop[0] != M.Vector([0,0,4]):
+        probs.append('col set setitem')
+    if s1_row_cop[0] != M.Vector([0,0,4], 'row'):
+        probs.append('row set setitem')
+    if s1_m_cop[0] != M.Vector([0,0,4]):
+        probs.append('mixed set setitem')
 
 def setDel(): # empty
     pass
