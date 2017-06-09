@@ -23,6 +23,8 @@ B = M.Matrix([[1,2,3],[6,5,2],[9,0,2],[6,2,3]])
 B_col = M.Matrix([[1,2,3],[6,5,2],[9,0,2],[6,2,3]], 'col')
 C = M.Matrix([[4,7,2],[0,7,4],[1,7,8]])
 C_col = M.Matrix([[4,7,2],[0,7,4],[1,7,8]], 'col')
+M_symmetric = M.Matrix([[1,4,3],[4,3,0],[3,0,1]])
+M_col_symmetric = M.Matrix([[1,4,3],[4,3,0],[3,0,1]], 'col')
 
 probs = []
 
@@ -413,7 +415,7 @@ def matCheckPivots(): # empty
 def matCountSolutions(): # empty
     pass
 
-def matTranspose(): # empty
+def matTranspose():
     if A.transpose() != A_col:
         probs.append("row matrix transpose")
     if B.transpose() != B_col:
@@ -426,8 +428,11 @@ def matTranspose(): # empty
 def matIsOrthogonal(): # empty
     pass
 
-def matIsSymmetric(): # empty
-    pass
+def matIsSymmetric():
+    if not M_symmetric.isSymmetric():
+        probs.append("row matrix false asymmetry")
+    if not M_col_symmetric.isSymmetric():
+        probs.append("col matrix false asymmetry")
 
 def matisInvertible(): # empty
     pass
