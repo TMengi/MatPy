@@ -1,5 +1,6 @@
 import copy
 
+# asks for input values
 def buildVector():
     # ask for dimensions and orientation
     orientation = ''
@@ -16,9 +17,11 @@ def buildVector():
 
     return Vector([int(x) for x in user_vector], orientation)
 
+# builds the zero vector for any given size
 def buildZeroVec(size):
     return Vector([0 for x in range(size)])
 
+# Vector object can be passed values as a list. default orientation is col
 class Vector:
     def __init__(self, vector, orientation='col'):
         # checks for valid orientation
@@ -162,11 +165,13 @@ class Vector:
         new.extend(other)
         return Vector(new)
 
+# finds the least squares solution for vector b onto the image of A
 def leastSquaresSol(A, b):
     sol = (A.transpose() * A).extend(A.transpose() * b).rref().transpose().pop()
     sol.orientation = 'col'
     return sol
 
+# Set object can be passed a list of vectors
 class Set:
     def __init__(self, set_vectors):
         if not isinstance(set_vectors, list):
