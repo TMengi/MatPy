@@ -236,7 +236,7 @@ class Set:
     # removes nontrivial dependence relations from a set by taking a subset of only those vectors which become pivot columns in rref
     def makeIndependent(self):
         if not self.isIndependent():
-            return Set([self[index] for index in (column for column in Matrix([vector for vector in self], 'col').rref().checkPivots()['columns'])])
+            return Set([self[index] for index in Matrix(self, 'col').rref().checkPivots()['columns']])
         else:
             return self
 

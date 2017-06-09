@@ -12,9 +12,9 @@ v3_row = M.Vector([4,0,1], 'row')
 s1 = M.Set([v1, v2, v3])
 s1_row = M.Set([v1_row, v2_row, v3_row])
 s1_m = M.Set([v1, v2_row, v3])
-s_not_dependent = M.Set([v1, v2, v3, M.Vector([6,12,2], 'row')])
-s_row_not_dependent = M.Set([v1_row, v2_row, v3_row, M.Vector([6,12,2], 'row')])
-s_m_not_dependent = M.Set([v1, v2_row, v3, M.Vector([6,12,2], 'row')])
+s_dependent = M.Set([v1, v2, v3, M.Vector([6,12,2], 'row')])
+s_row_dependent = M.Set([v1_row, v2_row, v3_row, M.Vector([6,12,2], 'row')])
+s_m_dependent = M.Set([v1, v2_row, v3, M.Vector([6,12,2], 'row')])
 
 A = M.Matrix([[1,2,3],[6,5,2],[9,0,2]])
 A_col = M.Matrix([[1,2,3],[6,5,2],[9,0,2]], 'col')
@@ -238,15 +238,20 @@ def setIsIndependent():
         probs.append("row set false dependency")
     if not s1_m.isIndependent():
         probs.append("mixed set false dependency")
-    if s_not_dependent.isIndependent():
+    if s_dependent.isIndependent():
         probs.append('col set false independency')
-    if s_row_not_dependent.isIndependent():
+    if s_row_dependent.isIndependent():
         probs.append('row set false independency')
-    if s_m_not_dependent.isIndependent():
+    if s_m_dependent.isIndependent():
         probs.append('mixed set false independency')
 
-def setMakeIndpendent(): # empty
-    pass
+def setMakeIndpendent():
+    if not s_dependent.makeIndependent().isIndependent():
+        probs.append("col set not made independent")
+    if not s_row_dependent.makeIndependent().isIndependent():
+        probs.append("row set not made independent")
+    if not s_m_dependent.makeIndependent().isIndependent():
+        probs.append("mixed set not made independent")
 
 '''begin Matrix tests'''
 def matSlicing():
