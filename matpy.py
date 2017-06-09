@@ -689,3 +689,6 @@ class Matrix:
             # return sum(nums)
 
             return sum([(-1)**col_num * self.makeOrientationMatch('row')[0][col_num] * Matrix([new_col for new_col_num, new_col in enumerate(self_cop) if new_col_num != col_num], 'col').determinant() for col_num, col in enumerate(self_cop)])
+
+if __name__ == '__main__':
+    pass
