@@ -162,6 +162,12 @@ class Vector:
         new.extend(other)
         return Vector(new)
 
+    def parallel(self, other):
+        if (self*other)/(self.magnitude*other.magnitude) == 1 or (self*other)/(self.magnitude*other.magnitude) == 1:
+            return True
+        else:
+            return False
+
 def leastSquaresSol(A, b):
     sol = (A.transpose() * A).extend(A.transpose() * b).rref().transpose().pop()
     sol.orientation = 'col'

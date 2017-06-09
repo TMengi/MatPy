@@ -164,6 +164,9 @@ def vecDel():
     if v1_row_cop[0] != 1:
         probs.append('row vector delitem')
 
+def vecParallel(): # empty
+    pass
+
 '''begin Set tests'''
 def setLength():
     if len(s1) != 3:
