@@ -414,7 +414,14 @@ def matCountSolutions(): # empty
     pass
 
 def matTranspose(): # empty
-    pass
+    if A.transpose() != A_col:
+        probs.append("row matrix transpose")
+    if B.transpose() != B_col:
+        probs.append("row nonsquare matrix transpose")
+    if A_col.transpose() != A:
+        probs.append("col matrix transpose")
+    if B_col.transpose() != B:
+        probs.append("col nonsquare matrix transpose")
 
 def matIsOrthogonal(): # empty
     pass
