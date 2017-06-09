@@ -454,9 +454,9 @@ def matPop():
         probs.append("row matrix pop without index")
     if A_col_cop.pop() != M.Vector([9,0,2], 'col'):
         probs.append("col matrix pop without index")
-    if A_cop.pop(1) != M.Vector([1,2,3]):
+    if A_cop.pop(0) != M.Vector([1,2,3]):
         probs.append("row matrix pop with index")
-    if A_col_cop.pop(1) != M.Vector([1,2,3], 'col'):
+    if A_col_cop.pop(0) != M.Vector([1,2,3], 'col'):
         probs.append("col matrix pop with index")
 
 def matImage(): # empty

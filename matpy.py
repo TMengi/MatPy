@@ -640,14 +640,14 @@ class Matrix:
 
     # just like pop method for list
     def pop(self, index=None):
-        try:
-            self[index]
-        except TypeError:
-            index = len(self)-1
-        popped = copy.copy(self[index])
-        del self[index]
-        popped.orientation = 'row'
-        return popped
+        if index == None:
+            popped = copy.copy(self[len(self)-1])
+            del self[len(self)-1]
+            return popped
+        else:
+            popped = copy.copy(self[index])
+            del self[index]
+            return popped
 
     # computes rref and checks which columns are pivots, then takes those columns out of the original matrix and makes a set out of them
     def image(self):
