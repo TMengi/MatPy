@@ -1,7 +1,6 @@
 import matpy as M
 import copy
 
-# test all the shit
 v1 = M.Vector([3,6,1])
 v1_row = M.Vector([3,6,1], 'row')
 v2 = M.Vector([2,8,2])
@@ -23,6 +22,8 @@ B = M.Matrix([[1,2,3],[6,5,2],[9,0,2],[6,2,3]])
 B_col = M.Matrix([[1,2,3],[6,5,2],[9,0,2],[6,2,3]], 'col')
 C = M.Matrix([[4,7,2],[0,7,4],[1,7,8]])
 C_col = M.Matrix([[4,7,2],[0,7,4],[1,7,8]], 'col')
+M_symmetric = M.Matrix([[1,4,3],[4,3,0],[3,0,1]])
+M_col_symmetric = M.Matrix([[1,4,3],[4,3,0],[3,0,1]], 'col')
 
 probs = []
 
@@ -413,14 +414,28 @@ def matCheckPivots(): # empty
 def matCountSolutions(): # empty
     pass
 
-def matTranspose(): # empty
-    pass
+def matTranspose():
+    if A.transpose() != A_col:
+        probs.append("row matrix transpose")
+    if B.transpose() != B_col:
+        probs.append("row nonsquare matrix transpose")
+    if A_col.transpose() != A:
+        probs.append("col matrix transpose")
+    if B_col.transpose() != B:
+        probs.append("col nonsquare matrix transpose")
 
 def matIsOrthogonal(): # empty
     pass
 
-def matIsSymmetric(): # empty
-    pass
+def matIsSymmetric():
+    if not M_symmetric.isSymmetric():
+        probs.append("row matrix false asymmetry")
+    if not M_col_symmetric.isSymmetric():
+        probs.append("col matrix false asymmetry")
+    if B.isSymmetric():
+        probs.append("row nonsquare matrix false symmetry")
+    if B_col.isSymmetric():
+        probs.append("col nonsquare matrix false symmetry")
 
 def matisInvertible(): # empty
     pass
@@ -431,67 +446,23 @@ def matInverse(): # empty
 def matExtend(): # empty
     pass
 
-def matPop(): # empty
-    pass
+def matPop():
+    A_cop = copy.deepcopy(A)
+    A_col_cop = copy.deepcopy(A_col)
+
+    if A_cop.pop() != M.Vector([9,0,2]):
+        probs.append("row matrix pop without index")
+    if A_col_cop.pop() != M.Vector([9,0,2], 'col'):
+        probs.append("col matrix pop without index")
+    if A_cop.pop(0) != M.Vector([1,2,3]):
+        probs.append("row matrix pop with index")
+    if A_col_cop.pop(0) != M.Vector([1,2,3], 'col'):
+        probs.append("col matrix pop with index")
 
 def matImage(): # empty
     pass
 
-
-
-tests = [
-vecSlicing(),
-vecLength(),
-vecIterate(),
-vecEquivalence(),
-vecAddition(),
-vecSubtraction(),
-vecScalarMul(),
-vecDot(),
-vecCross(),
-vecUnit(),
-vecNormalize(),
-vecExtend(),
-vecGet(),
-vecSet(),
-vecDel(),
-# all vector tests have been completed and included
-setLength(),
-setIterate(),
-setEquivalence(),
-setGet(),
-setSet(),
-setDel(),
-setIsIndependent(),
-setMakeIndpendent(),
-# all Set tests have been included
-matSlicing(),
-matDimensions(),
-matLength(),
-matIterate(),
-matEquivalence(),
-matAddition(),
-matSubtraction(),
-matMultiplication(),
-matGet(),
-matSet(),
-matDel(),
-matSwapRows(),
-matIsRREF(),
-matRREF(),
-matElimNegs(),
-matCheckPivots(),
-matCountSolutions(),
-matTranspose(),
-matIsOrthogonal(),
-matIsSymmetric(),
-matisInvertible(),
-matInverse(),
-matExtend(),
-matPop(),
-matImage(),
-# all Matrix tests have been included
-]
+tests = [vecSlicing(), vecLength(), vecIterate(), vecEquivalence(), vecAddition(), vecSubtraction(), vecScalarMul(), vecDot(), vecCross(), vecUnit(), vecNormalize(), vecExtend(), vecGet(), vecSet(), vecDel(), setLength(), setIterate(), setEquivalence(), setGet(), setSet(), setDel(), setIsIndependent(), setMakeIndpendent(), matSlicing(), matDimensions(), matLength(), matIterate(), matEquivalence(), matAddition(), matSubtraction(), matMultiplication(), matGet(), matSet(), matDel(), matSwapRows(), matIsRREF(), matRREF(), matElimNegs(), matCheckPivots(), matCountSolutions(), matTranspose(), matIsOrthogonal(), matIsSymmetric(), matisInvertible(), matInverse(), matExtend(), matPop(), matImage()]
 
 if __name__ == '__main__':
     print ("Problems:")
