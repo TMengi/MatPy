@@ -295,14 +295,14 @@ class Matrix:
         if not orientation == 'row' and not orientation == 'col':
             raise Exception('orientation must be either "row" or "col"')
 
-        # #  if the incoming matrix is a Set, just take the Vectors from that set as the data
-        # if isinstance(matrix, Set):
-        #     matrix = [vec for vec in Set]
-
         # if the incoming matrix is already a Matrix, just take the data and orientation
         if isinstance(matrix, Matrix):
-            # orientation = matrix.orientation
+            orientation = matrix.orientation
             matrix = matrix.matrix
+
+        #  if the incoming matrix is a Set, just take the Vectors from that set as the data
+        if isinstance(matrix, Set):
+            matrix = [vec for vec in matrix]
 
         # if an incoming piece of data is not a vector, turn it into one if possible
         for data_num, data in enumerate(matrix):
@@ -313,6 +313,7 @@ class Matrix:
             if not isinstance(matrix[data_num], Vector):
                 raise Exception("Matrix invalid, args passed can't be turned into vector")
 
+        # sets all the orientations of the respective Vectors to match that of the Matrix
         for vector in matrix:
             vector.orientation = orientation
 
