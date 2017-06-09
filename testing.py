@@ -12,6 +12,9 @@ v3_row = M.Vector([4,0,1], 'row')
 s1 = M.Set([v1, v2, v3])
 s1_row = M.Set([v1_row, v2_row, v3_row])
 s1_m = M.Set([v1, v2_row, v3])
+s_not_dependent = M.Set([v1, v2, v3, M.Vector([6,12,2], 'row')])
+s_row_not_dependent = M.Set([v1_row, v2_row, v3_row, M.Vector([6,12,2], 'row')])
+s_m_not_dependent = M.Set([v1, v2_row, v3, M.Vector([6,12,2], 'row')])
 
 A = M.Matrix([[1,2,3],[6,5,2],[9,0,2]])
 A_col = M.Matrix([[1,2,3],[6,5,2],[9,0,2]], 'col')
@@ -226,10 +229,21 @@ def setDel():
     if s1_row_cop[0] != M.Vector([2,8,2], 'row'):
         probs.append("row set delitem")
     if s1_m_cop[0] != M.Vector([2,8,2], 'row'):
-        probs.append("mixed set delitem") 
+        probs.append("mixed set delitem")
 
-def setIsIndependent(): # empty
-    pass
+def setIsIndependent():
+    if not s1.isIndependent():
+        probs.append("col set false dependency")
+    if not s1_row.isIndependent():
+        probs.append("row set false dependency")
+    if not s1_m.isIndependent():
+        probs.append("mixed set false dependency")
+    if s_not_dependent.isIndependent():
+        probs.append('col set false independency')
+    if s_row_not_dependent.isIndependent():
+        probs.append('row set false independency')
+    if s_m_not_dependent.isIndependent():
+        probs.append('mixed set false independency')
 
 def setMakeIndpendent(): # empty
     pass

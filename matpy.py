@@ -231,7 +231,7 @@ class Set:
 
     # creates a Matrix where each of the set vectors is a row and then computes rref. if every column is a pivot, the set is linearly independent
     def isIndependent(self):
-        return Matrix([vector for vector in self], 'col').rref().checkPivots()['rank'] == len(self)
+        return Matrix(self, 'col').rref().checkPivots()['rank'] == len(self)
 
     # removes nontrivial dependence relations from a set by taking a subset of only those vectors which become pivot columns in rref
     def makeIndependent(self):
@@ -302,7 +302,7 @@ class Matrix:
 
         #  if the incoming matrix is a Set, just take the Vectors from that set as the data
         if isinstance(matrix, Set):
-            matrix = [vec for vec in matrix]
+            matrix = [copy.copy(vec) for vec in matrix]
 
         # if an incoming piece of data is not a vector, turn it into one if possible
         for data_num, data in enumerate(matrix):
@@ -558,7 +558,7 @@ class Matrix:
     # takes a matrix and finds pivot columns by converting to rref and checking for the location of leading ones (also finds rank by definition)
     def checkPivots(self):
         # convert the matrix to rref and check leads of all rows. if a one, store the column number of that pivot
-        return {'columns':[self.checkLead(row)['column'] for row in self.rref() if self.checkLead(row)['digit'] != 0], 'rank':len([self.checkLead(row)['column'] for row in self.rref() if self.checkLead(row)['digit'] != 0])}
+        return {'columns':[self.checkLead(row)['column'] for row in self.rref() if self.checkLead(row)['digit'] == 1], 'rank':len([self.checkLead(row)['column'] for row in self.rref() if self.checkLead(row)['digit'] == 1])}
 
     # finds the number of solutions in a matrix by checking the rank against the number of rows
     def countSolutions(self):
