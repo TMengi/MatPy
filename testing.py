@@ -12,6 +12,9 @@ v3_row = M.Vector([4,0,1], 'row')
 s1 = M.Set([v1, v2, v3])
 s1_row = M.Set([v1_row, v2_row, v3_row])
 s1_m = M.Set([v1, v2_row, v3])
+s_dependent = M.Set([v1, v2, v3, M.Vector([6,12,2], 'row')])
+s_row_dependent = M.Set([v1_row, v2_row, v3_row, M.Vector([6,12,2], 'row')])
+s_m_dependent = M.Set([v1, v2_row, v3, M.Vector([6,12,2], 'row')])
 
 A = M.Matrix([[1,2,3],[6,5,2],[9,0,2]])
 A_col = M.Matrix([[1,2,3],[6,5,2],[9,0,2]], 'col')
@@ -133,8 +136,10 @@ def vecGet():
 def vecSet():
     v1_cop = copy.deepcopy(v1)
     v1_row_cop = copy.deepcopy(v1_row)
+
     v1_cop[2] = 5
     v1_row_cop[2] = 5
+
     if v1_cop[2] != 5:
         probs.append('col vector setitem')
     if v1_row_cop[2] != 5:
@@ -159,7 +164,7 @@ def vecDel():
         probs.append('row vector delitem')
 
 '''begin Set tests'''
-def setLength(): # empty
+def setLength():
     if len(s1) != 3:
         probs.append('len of col set')
     if len(s1_row) != 3:
@@ -167,26 +172,86 @@ def setLength(): # empty
     if len(s1_m) != 3:
         probs.append('len of mixed set')
 
-def setIterate(): # empty
-    pass
+def setIterate():
+    for index, vec in enumerate(s1):
+        if vec != s1[index]:
+            probs.append("col set iteration")
+    for index, vec in enumerate(s1_row):
+        if vec != s1_row[index]:
+            probs.append("row set iteration")
+    for index, vec in enumerate(s1_m):
+        if vec != s1_m[index]:
+            probs.append("mixed set iteration")
 
-def setEquivalence(): # empty
-    pass
+def setEquivalence():
+    if s1 != s1_row:
+        probs.append("c/r set equivalence")
+    if s1 != s1_m:
+        probs.append("c/m set equivalence")
+    if s1_row != s1_m:
+        probs.append("r/m set equivalence")
 
-def setGet(): # empty
-    pass
+def setGet():
+    if s1[0] != M.Vector([3,6,1]) or s1[1] != M.Vector([2,8,2]) or s1[2] != M.Vector([4,0,1]):
+        probs.append("col set getitem")
+    if s1_row[0] != M.Vector([3,6,1], 'row') or s1_row[1] != M.Vector([2,8,2], 'row') or s1_row[2] != M.Vector([4,0,1], 'row'):
+        probs.append("row set getitem")
+    if s1_m[0] != M.Vector([3,6,1]) or s1_m[1] != M.Vector([2,8,2], 'row') or s1_m[2] != M.Vector([4,0,1]):
+        probs.append("mixed set getitem")
 
-def setSet(): # empty
-    pass
+def setSet():
+    s1_cop = copy.deepcopy(s1)
+    s1_row_cop = copy.deepcopy(s1_row)
+    s1_m_cop = copy.deepcopy(s1_m)
 
-def setDel(): # empty
-    pass
+    s1_cop[0] = M.Vector([0,0,4])
+    s1_row_cop[0] = M.Vector([0,0,4], 'row')
+    s1_m_cop[0] = M.Vector([0,0,4])
 
-def setIsIndependent(): # empty
-    pass
+    if s1_cop[0] != M.Vector([0,0,4]):
+        probs.append('col set setitem')
+    if s1_row_cop[0] != M.Vector([0,0,4], 'row'):
+        probs.append('row set setitem')
+    if s1_m_cop[0] != M.Vector([0,0,4]):
+        probs.append('mixed set setitem')
 
-def setMakeIndpendent(): # empty
-    pass
+def setDel():
+    s1_cop = copy.deepcopy(s1)
+    s1_row_cop = copy.deepcopy(s1_row)
+    s1_m_cop = copy.deepcopy(s1_m)
+
+    del s1_cop[0]
+    del s1_row_cop[0]
+    del s1_m_cop[0]
+
+    if s1_cop[0] != M.Vector([2,8,2]):
+        probs.append("col set delitem")
+    if s1_row_cop[0] != M.Vector([2,8,2], 'row'):
+        probs.append("row set delitem")
+    if s1_m_cop[0] != M.Vector([2,8,2], 'row'):
+        probs.append("mixed set delitem")
+
+def setIsIndependent():
+    if not s1.isIndependent():
+        probs.append("col set false dependency")
+    if not s1_row.isIndependent():
+        probs.append("row set false dependency")
+    if not s1_m.isIndependent():
+        probs.append("mixed set false dependency")
+    if s_dependent.isIndependent():
+        probs.append('col set false independency')
+    if s_row_dependent.isIndependent():
+        probs.append('row set false independency')
+    if s_m_dependent.isIndependent():
+        probs.append('mixed set false independency')
+
+def setMakeIndpendent():
+    if not s_dependent.makeIndependent().isIndependent():
+        probs.append("col set not made independent")
+    if not s_row_dependent.makeIndependent().isIndependent():
+        probs.append("row set not made independent")
+    if not s_m_dependent.makeIndependent().isIndependent():
+        probs.append("mixed set not made independent")
 
 '''begin Matrix tests'''
 def matSlicing():
