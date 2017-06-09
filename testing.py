@@ -433,6 +433,10 @@ def matIsSymmetric():
         probs.append("row matrix false asymmetry")
     if not M_col_symmetric.isSymmetric():
         probs.append("col matrix false asymmetry")
+    if B.isSymmetric():
+        probs.append("row nonsquare matrix false symmetry")
+    if B_col.isSymmetric():
+        probs.append("col nonsquare matrix false symmetry")
 
 def matisInvertible(): # empty
     pass
