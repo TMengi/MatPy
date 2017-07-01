@@ -486,29 +486,24 @@ class Matrix:
 
     # run a series of checks to see if a matrix is in rref. carries a list of popped zero rows to be readded at the end
     def isRREF(self):
+
+        self.sort()
+
         # for each row use checkLead to find leading nonzero
         for row_num, row in enumerate(self):
             lead_info = self.checkLead(row)
 
             # if a zero row, pass over the leading one and zeroed column checks
-            if lead_info['digit'] == 0:
-                self.matrix.append(self.pop(row_num))
+            if lead_info['digit'] != 0:
+                # check that leading nonzero is a one
+                if lead_info['digit'] != 1:
+                    return {"solved":False, "problem":"leading nonzero in row", "location":row_num}
 
-            # check that leading nonzero is a one
-            elif lead_info['digit'] != 1:
-                return {"solved":False, "problem":"leading nonzero in row", "location":row_num}
-
-            elif True:
                 # check that all other numbers in column are zero
                 for other_row_num, other_row in enumerate(self):
                     if lead_info['column'] < len(row):
                         if other_row_num != row_num and other_row[lead_info['column']] != 0:
                             return {"solved":False, "problem":"nonzeroed column", "row":row_num, "location":other_row_num, "column":self.checkLead(row)['column']}
-
-            # check that pivots are encountered in correct order
-            elif row_num > 0 and self.checkLead(row)['digit'] != 0:
-                if self.checkLead(row)['column'] < self.checkLead(self[row_num-1])['column']:
-                    return {"solved":False, "problem":"pivots out of order", "location":row_num}
 
         # if all checks passed, matrix is solved
         return {"solved":True, "problem":None}
@@ -533,19 +528,24 @@ class Matrix:
                 status = RREF.update()
 
             # if the leading one has other nonzeroes in its column, scale and subtract from other rows to make zeroes. update status
-            if status['problem'] == 'nonzeroed column':
+            elif status['problem'] == 'nonzeroed column':
                 RREF[status['location']] -= RREF[status['row']] * RREF[status['location']][RREF.checkLead(RREF[status['row']])['column']]
                 status = RREF.update()
 
-            # if the rows are encountered out of order, swap them until order is correct. update status
-            if status['problem'] == 'pivots out of order':
-                RREF = RREF.swapRows(status['location']-1, status['location'])
+            # if the rows are encountered out of order, sort the rows
+            elif status['problem'] == 'pivots out of order':
+                #RREF = RREF.swapRows(status['location']-1, status['location'])
+                self.sort()
                 status = RREF.update()
 
         if status['solved'] == True:
             RREF = RREF.elimNegs()
 
             return RREF.makeOrientationMatch(self.orientation)
+
+    # sort the columns by pivot location
+    def sort(self):
+        self.matrix.sort(key = lambda vec: self.checkLead(vec)['column'])
 
     # replaces -0.0 with just plain 0.0. necessary for comparing two matrices
     def elimNegs(self):
