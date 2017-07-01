@@ -170,7 +170,7 @@ class Vector:
             return True
         else:
             return False
-          
+
 # finds the least squares solution for vector b onto the image of A
 def leastSquaresSol(A, b):
     sol = (A.transpose() * A).extend(A.transpose() * b).rref().transpose().pop()
@@ -554,7 +554,7 @@ class Matrix:
 
             return RREF.makeOrientationMatch(self.orientation)
 
-    # sort the columns by pivot location
+    # sort the vectors by pivot location
     def sort(self):
         self.matrix.sort(key = lambda vec: self.checkLead(vec)['column'])
 
