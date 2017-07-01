@@ -393,10 +393,10 @@ def matDel():
     if A_col_cop[0] != M.Vector([9,0,2]):
         probs.append('col matrix delitem')
 
-def matIsSquare():
+def matIsSquare(): # empty
     pass
 
-def matCheckLead():
+def matCheckLead(): # empty
     pass
 
 def matSwapRows(): # empty
