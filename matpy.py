@@ -688,17 +688,6 @@ class Matrix:
             self_cop = self_cop.makeOrientationMatch('col')
 
             # iterate over cols of new matrix, creating smaller matrices and computing determinants of those and multiplying them by the correct coefficient from the deleted top row, then summing these numbers
-
-            '''algorithm spelled out in for loops and stored in variables for debugging purposes'''
-            # nums = []
-            # for col_num, col in enumerate(self_cop):
-            #     new_mat = Matrix([new_col for new_col_num, new_col in enumerate(self_cop) if new_col_num != col_num], 'col')
-            #     print (new_mat)
-            #     smal_det = (-1)**col_num * self.makeOrientationMatch('row')[0][col_num] * new_mat.determinant()
-            #     print (smal_det)
-            #     nums.append(smal_det)
-            # return sum(nums)
-
             return sum([(-1)**col_num * self.makeOrientationMatch('row')[0][col_num] * Matrix([new_col for new_col_num, new_col in enumerate(self_cop) if new_col_num != col_num], 'col').determinant() for col_num, col in enumerate(self_cop)])
 
 if __name__ == '__main__':
